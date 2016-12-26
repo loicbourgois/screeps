@@ -1,5 +1,6 @@
 Resource.prototype.main = function() {
     this.init();
+    this.addToToMines();
     //console.log("Ressource - "+ this.resourceType + " : " + this.amount);
 };
 
@@ -24,4 +25,14 @@ Resource.prototype.getAvailableAmount = function() {
 
 Resource.prototype.assignCreep = function() {
     return true;
+}
+
+Creep.prototype.addToToEmptys = function() {
+    if(!Memory.toEmptys) {
+        Memory.toEmptys = {};
+    }
+    if(!Memory.toEmptys[this.id]) {
+        Memory.toEmptys[this.id] = {};
+    }
+    Memory.toEmptys[this.id].id = this.id;
 }
