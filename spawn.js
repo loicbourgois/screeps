@@ -161,6 +161,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 var sourceCount = this.room.find(FIND_SOURCES).length;
                 roles[i].min = sourceCount * 2;
                 roles[i].max = sourceCount * 10;
+                roles[i].minBodyCount = sourceCount * 2;
                 roles[i].maxBodyCount = sourceCount * 15;
                 break;
             }
