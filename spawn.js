@@ -218,7 +218,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 roles[i].min = 0;
                 roles[i].max = 0;
 				if(this.room.energyCapacityAvailable >= 650) {
-					roles[i].max = 1;
+					//roles[i].max = 1;
 				}
                 break;
             }
