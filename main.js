@@ -121,7 +121,9 @@ module.exports.loop = function () {
 	var rooms = Game.rooms
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms = rooms.filter(function (room) {
-		return (room.controller.my || room.controller.reservation.username == 'loicbourgois' );
+		var my = room.controller.my;
+		var res = room.controller.reservation;
+		return (my || (res&&res.username == 'loicbourgois') );
 	});
     for(var i in rooms) {
         var room = rooms[i];
