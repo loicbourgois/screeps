@@ -101,11 +101,16 @@ module.exports.loop = function () {
 	        delete Memory.toMines[i];
 	        continue;
 	    }
-	    var username;
-		var my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
-		var res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
+		//try {
+		var username, my, res;
+		try {
+			my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
+		} catch (e) {}
+		try {
+			res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
+		} catch (e) {}
 		if(res) {
-		    username = res.username;
+			username = res.username;
 		}
 		if(!res && !my && username != 'loicbourgois') {
 			delete Memory.toMines[i];
@@ -135,9 +140,18 @@ module.exports.loop = function () {
 	var rooms = Game.rooms
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms = rooms.filter(function (room) {
-		var my = room.controller.my;
-		var res = room.controller.reservation;
-		return (my || (res&&res.username == 'loicbourgois') );
+		//try {
+			var my, res;
+			try {
+				my = room.controller.my;
+			} catch (e) {}
+			try {
+				res = room.controller.reservation;
+			} catch (e) {}
+			return (my || (res&&res.username == 'loicbourgois') );
+		/*} catch (e) {
+			return;
+		}*/
 	});
     for(var i in rooms) {
         var room = rooms[i];
