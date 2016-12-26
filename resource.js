@@ -36,3 +36,8 @@ Resource.prototype.addToToEmptys = function() {
     }
     Memory.toEmptys[this.id].id = this.id;
 }
+
+Resource.prototype.getTotalCarrying = function() {
+	return this.amount;
+}
+ 
