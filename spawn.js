@@ -160,7 +160,7 @@ Spawn.prototype.createCreepMiner = function(role) {
         default: {
             Memory.creeps[code].roleId = role.id;
             Memory.creeps[code].assignedSourceId = assignedSourceId;
-            //Game.creeps[code].assignToMine(assignedSourceId);
+            Memory.creeps[code].originalRoom = this.room.name;
             break;
         }
     }
@@ -169,10 +169,19 @@ Spawn.prototype.createCreepMiner = function(role) {
 Spawn.prototype.getMySources = function() {
 	var rooms = Game.rooms;
 	var sources = [];
+	var name = this.room.name;
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms = rooms.filter(function (room) {
-		var my = room.controller.my;
-		return (my);
+		var same = (room.name==name);
+		var claimer = false;
+		var creeps = Memory.creeps;
+		creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
+		creeps = creeps.filter(function (creep) {
+			return (creep.memory 
+					&& creep.memory.originalRoom == name 
+					&& creep.memory.roleId == "claimer");
+		});
+		return (same || claimer);
 	});
 	for(var i in rooms) {
 		var sources = sources.concat(rooms[i].find(FIND_SOURCES));
@@ -248,7 +257,7 @@ Spawn.prototype.getRoleToCreate = function() {
 	var creeps = Game.creeps;
 	var name = this.room.name;
 	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
-	creeps.filter(function (creep) {
+	creeps = creeps.filter(function (creep) {
 		return (creep.memory.originalRoom == name);
 	});
     for(var i in creeps) {
