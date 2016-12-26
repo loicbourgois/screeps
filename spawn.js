@@ -166,14 +166,28 @@ Spawn.prototype.createCreepMiner = function(role) {
     }
 }
 
+Spawn.prototype.getMySources = function() {
+	var rooms = Game.rooms;
+	var sources;
+	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
+	rooms.filter(function (room) {
+		return (room.name == 'W22N77'
+			|| room.name == 'W21N77');
+	});
+	for(var i in rooms) {
+		var sources = sources.concat(rooms[i].find(FIND_SOURCES));
+	}
+	return sources;
+}
+
 Spawn.prototype.getRoleToCreate = function() {
     // Set min & max
     var roles = Memory.roles;
+	var sources = this.getMySources();
     //return findById(roles, 'carrier');
     for(var i in roles) {
         switch(roles[i].id) {
             case 'miner' : {
-                var sources = this.room.find(FIND_SOURCES);
                 var maxBodyCount = 0;
                 var max = 0;
                 for(var j in sources) {
@@ -186,7 +200,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 break;
             }
             case 'carrier' : {
-                var sourceCount = this.room.find(FIND_SOURCES).length;
+                var sourceCount = sources.length;
                 roles[i].min = sourceCount * 2;
                 roles[i].max = sourceCount * 10;
                 roles[i].minBodyCount = sourceCount * 2;
@@ -232,8 +246,8 @@ Spawn.prototype.getRoleToCreate = function() {
     }
     // Set counts
 	var creeps = Game.creeps;
-	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
 	var name = this.room.name;
+	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
 	creeps.filter(function (creep) {
 		return (creep.memory.originalRoom == name);
 	});
