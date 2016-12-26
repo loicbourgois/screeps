@@ -16,15 +16,6 @@ require('structure.extension');
 module.exports.loop = function () {
     console.log("--------------------------------");
     // Memory
-	delete Memory.toMines;
-	delete Memory.sources;
-	delete Memory.resources;
-    if(!Memory.sources) {
-        Memory.sources = {};
-    }
-    if(!Memory.resources) {
-        Memory.resources = {};
-    }
     Memory.roles = [ {
             'id':'miner',
             'bodyType':WORK,
