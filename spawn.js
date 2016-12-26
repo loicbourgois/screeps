@@ -232,6 +232,7 @@ Spawn.prototype.getRoleToCreate = function() {
     }
     // Set counts
 	var creeps = Game.creeps;
+	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
 	creeps.filter(function (creep) {
 		return (creep.memory.originalRoom == this.room.name);
 	});
