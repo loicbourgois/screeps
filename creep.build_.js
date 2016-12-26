@@ -21,8 +21,11 @@ Creep.prototype.build_ = function() {
         return;
     }
     var structures = this.room.find(FIND_STRUCTURES, { 
-	   filter: (structure) => { 
-		   return ((structure.hits < structure.hitsMax/2) && (structure.hits > 0) )
+		filter: (structure) => { 
+			return (
+				structure.hits < structure.hitsMax/2
+				&& structure.hits > 0
+				&& structure.hits < 200000)
 	   }
 	});
     
