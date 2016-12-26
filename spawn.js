@@ -18,6 +18,62 @@ Spawn.prototype.main = function() {
     this.createCreep_(body, role.id);
 }
 
+Spawn.prototype.getBody = function(role) {
+	var body = [], cost = 0, i = 0, bodyTypeCount=0;
+	// Min body
+	for(var i = 0 ; i < role.body.min.length ; i++) {
+		cost += BODYPART_COST[role.body.min[i]];
+		body.push(role.body.min[i]);
+		if(role.body.min[i] == role.bodyType) {
+			bodyTypeCount++;
+		}
+		if(cost > this.room.energyAvailable) {
+			return;
+		}
+	}
+	// Loop
+	var i = 0;
+	while(bodyTypeCount < role.maxBodyType
+			&& cost + BODYPART_COST[role.body.loop[i]] <= this.room.energyAvailable
+			&& body.length < MAX_CREEP_SIZE) {
+		cost += BODYPART_COST[role.body.loop[i]];
+		body.push(role.body.loop[i]);
+		if(role.body.loop[i] == role.bodyType) {
+			bodyTypeCount++;
+		}
+		i++;
+		i%=role.body.loop.length;
+	}
+	// Filler
+	var i = 0;
+	while(role.body.filler.length
+			&& body.length < MAX_CREEP_SIZE
+			&& cost + BODYPART_COST[role.body.loop[i]] <= this.room.energyAvailable) {
+		cost += BODYPART_COST[role.body.loop[i]];
+		body.push(role.body.filler[i]);
+		i++;
+		i%=role.body.filler.length;
+	}
+	//console.log(role.id, JSON.stringify(body));
+    if(cost > this.room.energyAvailable) {
+        return;
+    }
+    return body.reverse();
+}
+
+Spawn.prototype.createCreep_ = function(body, roleId) {
+    var code;
+    switch(code = this.createCreep(body)) {
+        case ERR_BUSY: {
+            break;
+        }
+        default: {
+            Memory.creeps[code].roleId = roleId;
+            break;
+        }
+    }
+}
+
 Spawn.prototype.createCreepMiner = function(role) { 
     var body = [], cost = 0, i = 0;
     var toMines = Memory.toMines;
@@ -90,7 +146,7 @@ Spawn.prototype.createCreepMiner = function(role) {
     while(body.length < MAX_CREEP_SIZE
             && cost + BODYPART_COST[role.body.loop[i]] <= this.room.energyAvailable) {
         cost += BODYPART_COST[role.body.loop[i]];
-        body.push(role.body.loop[i]);
+        body.push(role.body.filler[i]);
         i++;
         i%=role.body.filler.length;
     }
@@ -104,34 +160,6 @@ Spawn.prototype.createCreepMiner = function(role) {
             Memory.creeps[code].roleId = role.id;
             Memory.creeps[code].assignedSourceId = assignedSourceId;
             //Game.creeps[code].assignToMine(assignedSourceId);
-            break;
-        }
-    }
-    
-}
-
-Spawn.prototype.getBody = function(role) {
-    var body = [], cost = 0, i = 0;
-    while((cost + BODYPART_COST[role.body[i]] <= this.room.energyAvailable || i < role.minBodySize)
-            && i < role.body.length) {       
-        cost += BODYPART_COST[role.body[i]];
-        body.push(role.body[i]);
-        i++;
-    }
-    if(cost > this.room.energyAvailable) {
-        return;
-    }
-    return body.reverse();
-}
-
-Spawn.prototype.createCreep_ = function(body, roleId) {
-    var code;
-    switch(code = this.createCreep(body)) {
-        case ERR_BUSY: {
-            break;
-        }
-        default: {
-            Memory.creeps[code].roleId = roleId;
             break;
         }
     }
@@ -273,7 +301,6 @@ Spawn.prototype.getRoleToCreate = function() {
 Spawn.prototype.getFreeCapacity = function () {
     return this.energyCapacity - this.energy;
 }
-
 
 function findById(source, id) {
   for (var i = 0; i < source.length; i++) {

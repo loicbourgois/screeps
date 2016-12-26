@@ -31,48 +31,49 @@ module.exports.loop = function () {
             }
         },{
             'id':'carrier',
+            'maxBodyType':2,
             'bodyType':CARRY,
-            'body':[
-                MOVE, CARRY, MOVE, CARRY
-            ],
-            'minBodySize':2
+			'body': {
+                'min':[MOVE, CARRY],
+                'loop':[MOVE, CARRY],
+                'filler':[]
+            }
         },{
             'id':'upgrader',
+            'maxBodyType':5,
             'bodyType':WORK,
-            'body':[
-                CARRY, WORK, WORK, MOVE, 
-                WORK, CARRY, WORK, CARRY, MOVE,
-            ],
-            'minBodySize':4
+			'body': {
+                'min':[CARRY, WORK, MOVE],
+                'loop':[WORK, CARRY, MOVE],
+                'filler':[]
+            }
         },{
             'id':'builder',
-            'minBodySize':3,
+            'maxBodyType':5,
             'bodyType':WORK,
-            'body':[
-                CARRY, WORK, MOVE, 
-                WORK, CARRY, WORK, CARRY,
-                WORK, CARRY, WORK, CARRY,
-                WORK, CARRY, WORK, CARRY,
-            ]
+			'body': {
+                'min':[CARRY, WORK, MOVE],
+                'loop':[WORK, CARRY, MOVE],
+                'filler':[]
+            }
         },{
             'id':'attacker',
-            'minBodySize':2,
+			'maxBodyType':5,
             'bodyType':ATTACK,
-            'body':[
-                ATTACK, MOVE,
-                TOUGH, ATTACK, TOUGH, MOVE,
-                TOUGH, ATTACK, TOUGH, MOVE,
-                TOUGH, ATTACK, TOUGH, MOVE,
-            ],
+			'body': {
+                'min':[ATTACK, MOVE],
+                'loop':[ATTACK, MOVE],
+                'filler':[TOUGH]
+            }
         },{
             'id':'rangedAttacker',
+			'maxBodyType':5,
             'bodyType':RANGED_ATTACK,
-            'body':[
-                RANGED_ATTACK, MOVE,
-                TOUGH, RANGED_ATTACK, MOVE,
-                TOUGH, RANGED_ATTACK, MOVE,
-            ],
-            'minBodySize':2
+			'body': {
+                'min':[RANGED_ATTACK, MOVE],
+                'loop':[RANGED_ATTACK, MOVE],
+                'filler':[TOUGH]
+            }
         }
     ];
     for(var i in Memory.roles) {

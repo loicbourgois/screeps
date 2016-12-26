@@ -59,6 +59,9 @@ Creep.prototype.moveToFlag = function(flagName) {
     var flags = this.room.find(FIND_FLAGS, {
         filter: {  name: flagName}
     });
+	if(!flags[0]) {
+		return;
+	}
     this.moveTo(flags[0]);
 	this.sayMoving(flags[0].pos);
 }
