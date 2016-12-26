@@ -40,10 +40,10 @@ Room.prototype.main = function() {
         extensions[i].main();
     }
     // Creeps
-    var creeps = this.find(FIND_MY_CREEPS);
+    /*var creeps = this.find(FIND_MY_CREEPS);
     for(var i in creeps) {
 		creeps[i].main();
-    }
+    }*/
 };
 
 Room.prototype.init = function() {

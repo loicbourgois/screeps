@@ -93,9 +93,7 @@ module.exports.loop = function () {
         Memory.roles[i].count = 0;
         Memory.roles[i].bodyCount = 0;
     }
-    
-    
-    //
+    // Rooms
 	var rooms = Game.rooms
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms = rooms.filter(function (room) {
@@ -105,6 +103,11 @@ module.exports.loop = function () {
     for(var i in rooms) {
         var room = rooms[i];
         room.main();
+    }
+    // Creeps
+    var creeps = Game.creeps
+    for(var i in creeps) {
+		creeps[i].main();
     }
     // Stats
     console.log("CPU : "+Game.cpu.getUsed());
