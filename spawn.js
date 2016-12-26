@@ -232,7 +232,7 @@ Spawn.prototype.getRoleToCreate = function() {
 			case 'claimer' : {
                 roles[i].min = 0;
                 roles[i].max = 0;
-				if(this.room.energyCapacityAvailable >= 650) {
+				if(this.room.energyAvailable >= 650) {
 					roles[i].min = 0;
 					roles[i].max = 2;
 				}
