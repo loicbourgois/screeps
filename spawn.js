@@ -112,9 +112,9 @@ Spawn.prototype.createCreepMiner = function(role) {
 
 Spawn.prototype.getBody = function(role) {
     var body = [], cost = 0, i = 0;
-    while(cost + BODYPART_COST[role.body[i]] <= this.room.energyAvailable
-            || i < role.minBodyCount
-            || i < role.body.length) {
+    while((cost + BODYPART_COST[role.body[i]] <= this.room.energyAvailable
+            || i < role.minBodyCount)
+            && i < role.body.length) {
         cost += BODYPART_COST[role.body[i]];
         body.push(role.body[i]);
         i++;
@@ -283,6 +283,3 @@ function findById(source, id) {
   }
   throw "Couldn't find object with id: " + id;
 }
-
-
-
