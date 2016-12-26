@@ -218,7 +218,8 @@ Spawn.prototype.getRoleToCreate = function() {
                 roles[i].min = 0;
                 roles[i].max = 0;
 				if(this.room.energyCapacityAvailable >= 650) {
-					//roles[i].max = 1;
+					roles[i].min = 0;
+					roles[i].max = 1;
 				}
                 break;
             }
@@ -228,15 +229,10 @@ Spawn.prototype.getRoleToCreate = function() {
             }
         }
     }
-    // Check max
-    for(var i in roles) {
-        if(roles[i].max <= roles[i].min) {
-            //roles[i].max = roles[i].min+1;
-        }
-    }
     // Set counts
-    for(var i in Game.creeps) {
-		var creep = Game.creeps[i];
+	var creeps = this.room.find(FIND_MY_CREEPS);
+    for(var i in creeps) {
+		var creep = creeps[i];
 		var roleId = creep.memory.roleId;
 		var role = findById(roles, roleId);
 		role.count += 1;
