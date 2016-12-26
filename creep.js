@@ -16,6 +16,8 @@ Creep.prototype.main = function() {
         this.upgrade();
     } else if (this.memory.roleId == 'builder'){
         this.build_();
+    } else if (this.memory.roleId == 'claimer'){
+        this.claim_();
     }
 };
 

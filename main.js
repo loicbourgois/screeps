@@ -2,6 +2,7 @@ require('creep');
 require('creep.attack_');
 require('creep.build_');
 require('creep.carry_');
+require('creep.claim_');
 require('creep.mine');
 require('creep.upgrade');
 require('resource');
