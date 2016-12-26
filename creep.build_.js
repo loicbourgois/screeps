@@ -20,19 +20,14 @@ Creep.prototype.build_ = function() {
         return;
     }
     var structures = this.room.find(FIND_STRUCTURES, { 
-        filter: { structureType: STRUCTURE_WALL }
-    });
+	   filter: (structure) => { 
+		   return ((structure.hits < structure.hitsMax/2) && (structure.hits > 0) )
+	   }
+	});
     
-    var structure;
-    for(var i in structures) {
-        if(!structures[i].hits) {
-            continue;
-        }
-        if(structures[i].hits < 100000) {
-            structure = structures[i];
-            break;
-        }
-    }
+    var structure = structures[0];
+	this.say(structure.pos.x+"  "+structure.pos.y);
+	
     if(structure) {
         var code;
         switch(code = this.repair(structure)) {
