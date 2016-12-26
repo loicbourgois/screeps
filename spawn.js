@@ -174,13 +174,14 @@ Spawn.prototype.getMySources = function() {
 	rooms = rooms.filter(function (room) {
 		var same = (room.name==name);
 		var claimer = false;
-		var creeps = Memory.creeps;
+		var creeps = Game.creeps;
 		creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
 		creeps = creeps.filter(function (creep) {
 			return (creep.memory 
 					&& creep.memory.originalRoom == name 
 					&& creep.memory.roleId == "claimer");
 		});
+		claimer = creeps.length;
 		return (same || claimer);
 	});
 	for(var i in rooms) {

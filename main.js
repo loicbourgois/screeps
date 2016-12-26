@@ -97,6 +97,10 @@ module.exports.loop = function () {
 	}
 	// Clean toMines
 	for(var i in Memory.toMines) {
+	    if(!Game.getObjectById(Memory.toMines[i].id)) {
+	        delete Memory.toMines[i];
+	        continue;
+	    }
 		var my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
 		var res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
 		if(!res || !my || res.username != 'loicbourgois') {
