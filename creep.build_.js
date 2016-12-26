@@ -20,6 +20,7 @@ Creep.prototype.build_ = function() {
         }
         return;
     }
+	//
     var structures = this.room.find(FIND_STRUCTURES, { 
 		filter: (structure) => { 
 			return (
@@ -28,11 +29,9 @@ Creep.prototype.build_ = function() {
 				&& structure.hits < 200000)
 	   }
 	});
-    
     var structure = structures[0];
-	this.say(structure.pos.x+"  "+structure.pos.y);
-	
     if(structure) {
+		this.say(structure.pos.x+"  "+structure.pos.y);
         var code;
         switch(code = this.repair(structure)) {
             case ERR_NOT_IN_RANGE : {
@@ -50,6 +49,7 @@ Creep.prototype.build_ = function() {
         }
         return;
     }
+	//
     this.moveToFlag('builders-'+this.room.name);
     
 }
