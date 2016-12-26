@@ -35,7 +35,7 @@ module.exports.loop = function () {
             'body':[
                 MOVE, CARRY, MOVE, CARRY
             ],
-            'minBodyCount':2
+            'minBodySize':2
         },{
             'id':'upgrader',
             'bodyType':WORK,
@@ -43,10 +43,10 @@ module.exports.loop = function () {
                 CARRY, WORK, WORK, MOVE, 
                 WORK, CARRY, WORK, CARRY, MOVE,
             ],
-            'minBodyCount':4
+            'minBodySize':4
         },{
             'id':'builder',
-            'minBodyCount':3,
+            'minBodySize':3,
             'bodyType':WORK,
             'body':[
                 CARRY, WORK, MOVE, 
@@ -56,7 +56,7 @@ module.exports.loop = function () {
             ]
         },{
             'id':'attacker',
-            'minBodyCount':2,
+            'minBodySize':2,
             'bodyType':ATTACK,
             'body':[
                 ATTACK, MOVE,
@@ -72,7 +72,7 @@ module.exports.loop = function () {
                 TOUGH, RANGED_ATTACK, MOVE,
                 TOUGH, RANGED_ATTACK, MOVE,
             ],
-            'minBodyCount':2
+            'minBodySize':2
         }
     ];
     for(var i in Memory.roles) {
