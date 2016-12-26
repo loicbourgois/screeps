@@ -103,8 +103,14 @@ module.exports.loop = function () {
 	    }
 		var my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
 		var res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
-		if(!res || !my || res.username != 'loicbourgois') {
+		if(!res && !my && res.username != 'loicbourgois') {
 			delete Memory.toMines[i];
+			continue;
+		}
+		for(var j in Memory.toMines[i].creeps){
+			if(!Game.getObjectById(Memory.toMines[i].creeps[j])) {
+				delete Memory.toMines[i].creeps[j];
+			}
 		}
 	}
 	// Clean toEmptys
