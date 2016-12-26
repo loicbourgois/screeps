@@ -16,6 +16,8 @@ require('structure.extension');
 module.exports.loop = function () {
     console.log("--------------------------------");
     // Memory
+	delete Memory.sources;
+	delete Memory.resources;
     Memory.roles = [ {
             'id':'miner',
             'bodyType':WORK,
@@ -87,6 +89,34 @@ module.exports.loop = function () {
         Memory.roles[i].count = 0;
         Memory.roles[i].bodyCount = 0;
     }
+	// Clean creeps
+	for(var i in Memory.creeps) {
+		if(!Game.creeps[i]) {
+			delete Memory.creeps[i];
+		}
+	}
+	// Clean toMines
+	for(var i in Memory.toMines) {
+		var my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
+		var res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
+		if(!res || !my || res.username != 'loicbourgois') {
+			delete Memory.toMines[i];
+		}
+	}
+	// Clean toEmptys
+	for(var i in Memory.toEmptys) {
+		var object = Game.getObjectById(Memory.toEmptys[i].id);
+		if(!object) {
+			delete Memory.toEmptys[i];
+		}
+	}
+	// Clean toFills
+	for(var i in Memory.toFills) {
+		var object = Game.getObjectById(Memory.toFills[i].id);
+		if(!object) {
+			delete Memory.toFills[i];
+		}
+	}
     // Rooms
 	var rooms = Game.rooms
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });

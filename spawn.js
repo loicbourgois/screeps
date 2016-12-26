@@ -171,8 +171,8 @@ Spawn.prototype.getMySources = function() {
 	var sources = [];
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms = rooms.filter(function (room) {
-		return (room.name == 'W22N77'
-			|| room.name == 'W21N77');
+		var my = room.controller.my;
+		return (my);
 	});
 	for(var i in rooms) {
 		var sources = sources.concat(rooms[i].find(FIND_SOURCES));

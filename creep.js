@@ -1,6 +1,6 @@
 Creep.prototype.main = function() {
     if(this.spawning) {
-		console.log(this.memory.roleId+" spawning in "+this.room.name+" "+JSON.stringify(this.body));
+		console.log(this.memory.roleId+" spawning in "+this.room.name);
         return;
     }
     if (this.memory.roleId == 'miner') {

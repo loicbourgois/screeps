@@ -1,17 +1,6 @@
 Source.prototype.main = function() {
-    this.init();
     this.addToToMines();
-    //this.checkAssignations();
 };
-
-Source.prototype.init = function() {
-    if(!Memory.sources[this.id]) {
-        Memory.sources[this.id] = {};
-    }
-    if(!Memory.sources[this.id].assignations) {
-        Memory.sources[this.id].assignations = {};
-    }
-}
 
 Source.prototype.addToToMines = function() { 
     if(!Memory.toMines) {
@@ -130,15 +119,6 @@ Source.prototype.getAssignedPositions = function() {
         positions.push(assignation.position);
     }
     return positions;
-}
-
-Source.prototype.checkAssignations = function() {
-    for(var i in Memory.sources[this.id].assignations) {
-        var creep = Game.getObjectById(Memory.sources[this.id].assignations[i].cid);
-        if(!creep) {
-           Memory.sources[this.id].assignations = Memory.sources[this.id].assignations[i] = null;
-        }
-    }
 }
 
 Source.prototype.assignCreep = function(creep) {

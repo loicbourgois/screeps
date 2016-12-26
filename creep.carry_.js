@@ -44,7 +44,7 @@ Creep.prototype.carry_ = function() {
             for(var i in a.creeps) {
                 var creep = Game.getObjectById(a.creeps[i]);
                 if(!creep) {
-                    delete a.creeps[i];
+                    delete Memory.toEmptys[a.id].creeps[i];
                     continue;
                 }
                 aQuantity -= creep.freeToCarry();
@@ -59,7 +59,7 @@ Creep.prototype.carry_ = function() {
             for(var i in b.creeps) {
                 var creep = Game.getObjectById(b.creeps[i]);
                 if(!creep) {
-                    delete b.creeps[i];
+                    delete Memory.toEmptys[b.id].creeps[i];
                     continue;
                 }
                 bQuantity -= creep.freeToCarry();

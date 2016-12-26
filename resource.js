@@ -1,16 +1,5 @@
 Resource.prototype.main = function() {
-    this.init();
     this.addToToEmptys();
-    //console.log("Ressource - "+ this.resourceType + " : " + this.amount);
-};
-
-Resource.prototype.init = function() {
-    if(!Memory.resources[this.id]) {
-        Memory.resources[this.id] = {};
-    }
-    if(!Memory.resources[this.id].assignations) {
-        Memory.resources[this.id].assignations = {};
-    }
 }
 
 Resource.prototype.getAvailableAmount = function() {
