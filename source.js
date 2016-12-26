@@ -1,6 +1,6 @@
 Source.prototype.main = function() {
     this.init();
-	this.addToToEmptys();
+    this.addToToMines();
     //this.checkAssignations();
 };
 

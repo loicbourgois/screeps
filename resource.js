@@ -1,6 +1,6 @@
 Resource.prototype.main = function() {
     this.init();
-    this.addToToMines();
+    this.addToToEmptys();
     //console.log("Ressource - "+ this.resourceType + " : " + this.amount);
 };
 
