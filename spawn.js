@@ -168,7 +168,7 @@ Spawn.prototype.createCreepMiner = function(role) {
 
 Spawn.prototype.getMySources = function() {
 	var rooms = Game.rooms;
-	var sources;
+	var sources = [];
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 	rooms.filter(function (room) {
 		return (room.name == 'W22N77'
