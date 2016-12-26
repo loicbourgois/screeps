@@ -158,10 +158,10 @@ Spawn.prototype.getRoleToCreate = function() {
                 break;
             }
             case 'carrier' : {
-                var min = this.room.find(FIND_SOURCES).length;
-                roles[i].min = min * 1;
-                roles[i].max = min * 10;
-                roles[i].maxBodyCount = min * 15;
+                var sourceCount = this.room.find(FIND_SOURCES).length;
+                roles[i].min = sourceCount * 2;
+                roles[i].max = sourceCount * 10;
+                roles[i].maxBodyCount = sourceCount * 15;
                 break;
             }
             case 'attacker' : {
