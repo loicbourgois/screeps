@@ -3,6 +3,7 @@ Creep.prototype.build_ = function() {
     var sites = this.room.find(FIND_CONSTRUCTION_SITES);
     if(sites.length) {
         var site = sites[0];
+		this.sayMoving(sites[0].pos);
         var code;
         switch(code = this.build(site)) {
             case ERR_NOT_IN_RANGE : {
@@ -31,7 +32,7 @@ Creep.prototype.build_ = function() {
 	});
     var structure = structures[0];
     if(structure) {
-		this.say(structure.pos.x+"  "+structure.pos.y);
+		this.sayMoving(structure.pos);
         var code;
         switch(code = this.repair(structure)) {
             case ERR_NOT_IN_RANGE : {
@@ -59,4 +60,5 @@ Creep.prototype.moveToFlag = function(flagName) {
         filter: {  name: flagName}
     });
     this.moveTo(flags[0]);
+	this.sayMoving(flags[0].pos);
 }

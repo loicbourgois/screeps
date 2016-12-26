@@ -19,6 +19,9 @@ Creep.prototype.main = function() {
     }
 };
 
+Creep.prototype.sayMoving = function(pos) {
+	this.say(pos.x+"  "+pos.y);
+}
 
 Creep.prototype.countBodyPart = function(bodyType) {
     var count = 0;
