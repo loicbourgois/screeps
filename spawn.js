@@ -194,22 +194,32 @@ Spawn.prototype.getRoleToCreate = function() {
             }
             case 'attacker' : {
                 roles[i].min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
+                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'rangedAttacker' : {
                 roles[i].min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
+                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'upgrader' : {
                 roles[i].min = 1;
-                roles[i].max = 2;
+                roles[i].max = 3;
+                roles[i].minBodyCount = 1;
+                roles[i].maxBodyCount = roles[i].max * roles[i].maxBodyType;
                 break;
             }
             case 'builder' : {
                 roles[i].min = 0;
                 roles[i].max = 2;
+                break;
+            }
+			case 'claimer' : {
+                roles[i].min = 0;
+                roles[i].max = 0;
+				if(this.room.energyCapacityAvailable >= 650) {
+					roles[i].max = 1;
+				}
                 break;
             }
             default : {
@@ -221,7 +231,7 @@ Spawn.prototype.getRoleToCreate = function() {
     // Check max
     for(var i in roles) {
         if(roles[i].max <= roles[i].min) {
-            roles[i].max = roles[i].min+1;
+            //roles[i].max = roles[i].min+1;
         }
     }
     // Set counts

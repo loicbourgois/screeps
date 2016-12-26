@@ -74,6 +74,15 @@ module.exports.loop = function () {
                 'loop':[RANGED_ATTACK, MOVE],
                 'filler':[TOUGH]
             }
+        },{
+            'id':'claimer',
+			'maxBodyType':5,
+            'bodyType':CLAIM,
+			'body': {
+                'min':[CLAIM, MOVE],
+                'loop':[MOVE, CLAIM],
+                'filler':[TOUGH]
+            }
         }
     ];
     for(var i in Memory.roles) {
