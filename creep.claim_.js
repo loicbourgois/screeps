@@ -1,8 +1,8 @@
 Creep.prototype.claim_ = function() {
 	this.say("reserve");
-	room = 'W22N77';
-	if(this.room.name != room) {
-	   	this.moveTo(new RoomPosition(25,25, room));
+	roomName = 'W22N77';
+	if(this.room.name != roomName) {
+	   	this.moveTo(new RoomPosition(25,25, roomName));
 	   	return;
 	} else {
 	    var code;

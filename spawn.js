@@ -220,7 +220,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 roles[i].max = 0;
 				if(this.room.energyCapacityAvailable >= 650) {
 					roles[i].min = 0;
-					roles[i].max = 1;
+					roles[i].max = 2;
 				}
                 break;
             }
@@ -231,10 +231,9 @@ Spawn.prototype.getRoleToCreate = function() {
         }
     }
     // Set counts
-	var creeps = this.room.find(FIND_MY_CREEPS, {
-		filter: (creep) => { 
-			return (creep.memory.originalRoom == this.room.name);
-	   }
+	var creeps = Game.creeps;
+	creeps.filter(function (creep) {
+		return (creep.memory.originalRoom == this.room.name);
 	});
     for(var i in creeps) {
 		var creep = creeps[i];
