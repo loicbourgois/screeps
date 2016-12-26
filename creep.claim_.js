@@ -7,11 +7,16 @@ Creep.prototype.claim_ = function() {
 	} else {
 	    var code;
 	    switch (code = this.reserveController(this.room.controller)) {
+			case OK : {
+				break;
+			}
 	        case ERR_NOT_IN_RANGE : {
 	            this.moveTo(this.room.controller);
+				break;
 	        }
 	        default : {
 	            console.log(code);
+	            this.say(code);
 	            break;
 	        }
 	    }
