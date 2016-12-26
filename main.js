@@ -96,8 +96,14 @@ module.exports.loop = function () {
     
     
     //
-    for(var i in Game.rooms) {
-        var room = Game.rooms[i];
+	var rooms = Game.rooms
+	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
+	rooms = rooms.filter(function (room) {
+		return (room.name == 'W22N77'
+			|| room.name == 'W21N77');
+	});
+    for(var i in rooms) {
+        var room = rooms[i];
         room.main();
     }
     // Stats

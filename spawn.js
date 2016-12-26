@@ -170,7 +170,7 @@ Spawn.prototype.getMySources = function() {
 	var rooms = Game.rooms;
 	var sources = [];
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
-	rooms.filter(function (room) {
+	rooms = rooms.filter(function (room) {
 		return (room.name == 'W22N77'
 			|| room.name == 'W21N77');
 	});
