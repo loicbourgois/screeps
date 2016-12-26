@@ -27,7 +27,7 @@ Resource.prototype.assignCreep = function() {
     return true;
 }
 
-Creep.prototype.addToToEmptys = function() {
+Resource.prototype.addToToEmptys = function() {
     if(!Memory.toEmptys) {
         Memory.toEmptys = {};
     }
