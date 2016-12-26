@@ -24,6 +24,7 @@ Creep.prototype.carry_ = function() {
                 break;
             }
         }
+		this.sayMoving(toFill.pos);
     }
     // Search toEmpty
     else if(!this.memory.toEmptyId && this.freeToCarry()) {
@@ -72,7 +73,6 @@ Creep.prototype.carry_ = function() {
         var toEmpty = Game.getObjectById(this.memory.toEmptyId);
         if(!toEmpty) {
             this.unassignCreepToEmpty();
-            //this.carry_();
             return;
         }
         var code;
@@ -105,6 +105,7 @@ Creep.prototype.carry_ = function() {
                 break;
             }
         }
+		this.sayMoving(toEmpty.pos);
     }
     // Search tofill
     else if(this.getTotalCarrying() && !this.memory.toFillId) {
