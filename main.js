@@ -16,6 +16,9 @@ require('structure.extension');
 module.exports.loop = function () {
     console.log("--------------------------------");
     // Memory
+	delete Memory.toMines;
+	delete Memory.sources;
+	delete Memory.resources;
     if(!Memory.sources) {
         Memory.sources = {};
     }
