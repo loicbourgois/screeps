@@ -69,6 +69,7 @@ Spawn.prototype.createCreep_ = function(body, roleId) {
         }
         default: {
             Memory.creeps[code].roleId = roleId;
+            Memory.creeps[code].originalRoom = this.room.name;
             break;
         }
     }
@@ -230,7 +231,11 @@ Spawn.prototype.getRoleToCreate = function() {
         }
     }
     // Set counts
-	var creeps = this.room.find(FIND_MY_CREEPS);
+	var creeps = this.room.find(FIND_MY_CREEPS, {
+		filter: (creep) => { 
+			return (creep.memory.originalRoom == this.room.name);
+	   }
+	});
     for(var i in creeps) {
 		var creep = creeps[i];
 		var roleId = creep.memory.roleId;
