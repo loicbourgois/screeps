@@ -10,7 +10,8 @@ Creep.prototype.build_ = function() {
                 break;
             }
             case ERR_NOT_ENOUGH_RESOURCES : {
-                this.moveToFlag('builders-'+this.room.name);
+                //this.moveToFlag('builders-'+this.room.name);
+				this.moveTo(site);
                 break;
             }
             default : {
@@ -37,6 +38,7 @@ Creep.prototype.build_ = function() {
             }
             case ERR_NOT_ENOUGH_RESOURCES : {
                 //this.moveToFlag('builders-'+this.room.name);
+				this.moveTo(structure);
                 break;
             }
             default : {
