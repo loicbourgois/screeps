@@ -26,5 +26,9 @@ Creep.prototype.mine = function() {
 }
 
 Creep.prototype.assignToMines = function() {
-    Memory.toMines[this.memory.assignedSourceId].creeps[this.id] = this.id;
+	try {
+		Memory.toMines[this.memory.assignedSourceId].creeps[this.id] = this.id;
+	} catch (e) {
+		his.memory.assignedSourceId = null;
+	}
 }
