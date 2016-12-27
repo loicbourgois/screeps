@@ -192,7 +192,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 var maxBodyCount = 0;
                 var max = 0;
                 for(var j in sources) {
-                    maxBodyCount += sources[j].energyCapacity/600 + BONUS_NEEDED_WORKING;
+                    maxBodyCount += (sources[j].energyCapacity/600) + BONUS_NEEDED_WORKING;
                     max += sources[j].getAllPositions().length;
                 }
                 role.max = max;
@@ -325,8 +325,8 @@ Spawn.prototype.getRoleToCreate = function() {
 	    }
         message += "\t" + ("   " + roles[i].count).slice(-3) 
             + " /" + ("   " + roles[i].max).slice(-3) ;
-        message += "\t" + ("   " + roles[i].bodyCount).slice(-3) 
-            + " /" + ("   " + roles[i].maxBodyCount).slice(-3) ;
+        message += "\t" + ("    " + roles[i].bodyCount).slice(-4) 
+            + " /" + ("    " + Math.round(roles[i].maxBodyCount)).slice(-4) ;
         message += "\t" + roles[i].priority.toFixed(2);
 	    console.log(message);
     }
