@@ -214,12 +214,12 @@ Spawn.prototype.getRoleToCreate = function() {
             }
             case 'attacker' : {
                 role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'rangedAttacker' : {
                 role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'upgrader' : {
