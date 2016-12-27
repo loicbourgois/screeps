@@ -66,7 +66,9 @@ Creep.prototype.carry_ = function() {
             }
             return bQuantity-aQuantity;
         });
-        this.assignCreepToEmpty(this.id, toEmptys[0].id);
+		try {
+			this.assignCreepToEmpty(this.id, toEmptys[0].id);
+		} catch (e) {}
     }
     // Move & empty
     else if(this.memory.toEmptyId && this.freeToCarry()) {

@@ -75,10 +75,18 @@ Spawn.prototype.createCreep_ = function(body, roleId) {
     }
 }
 
+Spawn.prototype.say_ = function(message) {
+	console.log("spawn"
+		+ "\t"+this.room.name
+		+ "\t"+this.pos.x+","+this.pos.y
+		+ "\t"+message);
+}
+
 Spawn.prototype.createCreepMiner = function(role) { 
     var body = [], cost = 0, i = 0;
-    var toMines = Memory.toMines;
+    var toMines = Memory.rooms[this.room.name].toMines;
     if(!toMines) {
+		this.say_("no mine");
         return;
     }
     toMines = Object.keys(toMines).map(function (key) { return toMines[key]; });
@@ -192,11 +200,12 @@ Spawn.prototype.getMySources = function() {
 
 Spawn.prototype.getRoleToCreate = function() {
     // Set min & max
-    var roles = Memory.roles;
+    let roles = Memory.rooms[this.room.name].roles;
 	var sources = this.getMySources();
     //return findById(roles, 'carrier');
     for(var i in roles) {
-        switch(roles[i].id) {
+		let role=roles[i];
+        switch(role.id) {
             case 'miner' : {
                 var maxBodyCount = 0;
                 var max = 0;
@@ -204,52 +213,48 @@ Spawn.prototype.getRoleToCreate = function() {
                     maxBodyCount += sources[j].energyCapacity/600 + 1;
                     max += sources[j].getAllPositions().length;
                 }
-                roles[i].max = max;
-                roles[i].maxBodyCount = maxBodyCount;
-                roles[i].minBodyCount = sources.length;
+                role.max = max;
+                role.maxBodyCount = maxBodyCount;
+                role.minBodyCount = sources.length;
                 break;
             }
             case 'carrier' : {
                 var sourceCount = sources.length;
-                roles[i].min = sourceCount * 2;
-                roles[i].max = sourceCount * 10;
-                roles[i].minBodyCount = sourceCount * 2;
-                roles[i].maxBodyCount = sourceCount * 15;
+                role.min = sourceCount * 2;
+                role.max = sourceCount * 10;
+                role.minBodyCount = sourceCount * 2;
+                role.maxBodyCount = sourceCount * 15;
                 break;
             }
             case 'attacker' : {
-                roles[i].min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'rangedAttacker' : {
-                roles[i].min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                roles[i].max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
                 break;
             }
             case 'upgrader' : {
-                roles[i].min = 1;
-                roles[i].max = 3;
-                roles[i].minBodyCount = 1;
-                roles[i].maxBodyCount = roles[i].max * roles[i].maxBodyType;
+                role.min = 1;
+                role.max = 3;
+                role.minBodyCount = 1;
+                role.maxBodyCount = role.max * role.maxBodyType;
                 break;
             }
             case 'builder' : {
-                roles[i].min = 0;
-                roles[i].max = 2;
+                role.min = 0;
+                role.max = 2;
                 break;
             }
 			case 'claimer' : {
                 roles[i].min = 0;
                 roles[i].max = 0;
-				if(this.room.energyAvailable >= 650) {
-					roles[i].min = 0;
-					roles[i].max = 2;
-				}
                 break;
             }
             default : {
-                //console.log("unknownm role!");
+                this.say_("unknownm role!");
                 break;
             }
         }
@@ -263,6 +268,9 @@ Spawn.prototype.getRoleToCreate = function() {
 	});
     for(var i in creeps) {
 		var creep = creeps[i];
+		if(creep.spawning) {
+			continue;
+		}
 		var roleId = creep.memory.roleId;
 		var role = findById(roles, roleId);
 		role.count += 1;

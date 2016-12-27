@@ -1,3 +1,4 @@
+'use strict';
 require('creep');
 require('creep.attack_');
 require('creep.build_');
@@ -15,10 +16,12 @@ require('structure.extension');
 
 module.exports.loop = function () {
     console.log("--------------------------------");
-    // Memory
+    // 
 	delete Memory.sources;
 	delete Memory.resources;
-    Memory.roles = [ {
+	delete Memory.toMines;
+	// Roles
+	Memory.roles = [ {
             'id':'miner',
             'bodyType':WORK,
             'body': {
@@ -82,14 +85,31 @@ module.exports.loop = function () {
             }
         }
     ];
-    for(var i in Memory.roles) {
-        Memory.roles[i].min = 0;
-        Memory.roles[i].max = 0;
-        Memory.roles[i].priority = 0;
-        Memory.roles[i].count = 0;
-        Memory.roles[i].bodyCount = 0;
+    for(let i in Memory.roles) {
+		let role = Memory.roles[i];
+        role.min = 0;
+        role.max = 0;
+        role.priority = 0;
+        role.count = 0;
+        role.bodyCount = 0;
     }
-	// Clean creeps
+	// Rooms
+	if(!Memory.rooms) {
+		Memory.rooms = {};
+	}
+	for(let i in Game.rooms) {
+		let room = Game.rooms[i];
+		if(!Memory.rooms[room.name] && room.controller.my) {
+			Memory.rooms[room.name] = {
+				name : room.name
+			}
+		}
+	}
+	for(let i in Memory.rooms) {
+		let room = Game.rooms[Memory.rooms[i].name];
+		room.main();
+	}
+	// Creeps
 	for(var i in Memory.creeps) {
 		if(!Game.creeps[i]) {
 			delete Memory.creeps[i];
@@ -155,7 +175,7 @@ module.exports.loop = function () {
 	});
     for(var i in rooms) {
         var room = rooms[i];
-        room.main();
+        room.main_();
     }
     // Creeps
     var creeps = Game.creeps

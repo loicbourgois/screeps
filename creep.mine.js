@@ -1,9 +1,9 @@
 Creep.prototype.mine = function() {
     // Assign source
     if(!this.memory.assignedSourceId) {
-		
-		var toMines = Memory.toMines;
+		var toMines = Memory.rooms[this.memory.originalRoom].toMines;
 		if(!toMines) {
+			this.say_("no mine");
 			return;
 		}
 		toMines = Object.keys(toMines).map(function (key) { return toMines[key]; });
@@ -32,8 +32,7 @@ Creep.prototype.mine = function() {
 				break;
 			}
 		}
-		
-        this.say("mine ?");
+        this.say_("mine ?");
         return;
     }
     // Harvest
@@ -49,8 +48,12 @@ Creep.prototype.mine = function() {
                 this.moveTo(Game.getObjectById(this.memory.assignedSourceId));
                 break;
             }
+			case ERR_INVALID_TARGET:{
+                this.say_("invalid target : "+this.memory.assignedSourceId);
+                break;
+            }
             default:{
-                this.say(code);
+                this.say_(code);
                 break;
             }
         }
@@ -58,9 +61,7 @@ Creep.prototype.mine = function() {
 }
 
 Creep.prototype.assignToMines = function() {
-	try {
-		Memory.toMines[this.memory.assignedSourceId].creeps[this.id] = this.id;
-	} catch (e) {
-		this.memory.assignedSourceId = null;
-	}
+	let source = Game.getObjectById(this.memory.assignedSourceId);
+	let creeps = source.getCreeps();
+	creeps[this.id] = this.id;
 }

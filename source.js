@@ -1,28 +1,30 @@
 Source.prototype.main = function() {
-    this.addToToMines();
+    //this.addToToMines();
 };
 
-Source.prototype.addToToMines = function() { 
-    if(!Memory.toMines) {
-        Memory.toMines = {};
-    }
-    if(!Memory.toMines[this.id]) {
-        Memory.toMines[this.id] = {};
-    }
-    if(!Memory.toMines[this.id].creeps) {
-        Memory.toMines[this.id].creeps = {};
-    }
-    Memory.toMines[this.id].id = this.id;
+Source.prototype.getCreeps = function() {
+	let creeps;
+	for(let i in Memory.rooms) {
+		let toMines = Memory.rooms[i].toMines;
+		for(let j in toMines) {
+			let toMine = toMines[j];
+			if(toMine.id == this.id) {
+				creeps = toMine.creeps;
+				//console.log("yy",JSON.stringify(creeps));
+			}
+		}
+	}
+	return creeps;
 }
 
 Source.prototype.getNeededWorking = function() { 
-    var n = this.energyCapacity / 600;
-    var creeps = Memory.toMines[this.id].creeps;
+    let n = this.energyCapacity / 600;
+	let creeps = this.getCreeps();
     creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
     for(var i in creeps) {
         var creep = Game.getObjectById(creeps[i]);
         if(!creep) {
-            delete Memory.toMines[this.id].creeps[i];
+            delete this.getCreeps[i];
             continue;
         }
         n -= creep.countBodyPart(WORK);
@@ -30,16 +32,15 @@ Source.prototype.getNeededWorking = function() {
     return n;
 }
 
-
 Source.prototype.getAvailablePositionCount = function() { 
     var a = this.getAllPositions().length;
-    var creeps = Memory.toMines[this.id].creeps;
+	let creeps = this.getCreeps();
     creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
     var b = 0;
     for(var i in creeps) {
         var creep = Game.getObjectById(creeps[i]);
         if(!creep) {
-            delete Memory.toMines[this.id].creeps[i];
+            delete this.getCreeps[i];
             continue;
         }
         b++;

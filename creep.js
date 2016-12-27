@@ -26,6 +26,14 @@ Creep.prototype.sayMoving = function(pos) {
 	//this.say(pos.x+"  "+pos.y);
 }
 
+Creep.prototype.say_ = function(message) {
+	this.say(message);
+	console.log(this.memory.roleId 
+		+ "\t"+this.room.name
+		+ "\t"+this.pos.x+","+this.pos.y
+		+ "\t"+message);
+}
+
 Creep.prototype.countBodyPart = function(bodyType) {
     var count = 0;
     for(var i in this.body) {

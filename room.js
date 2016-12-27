@@ -1,7 +1,30 @@
 Room.prototype.main = function() {
-    // Memory
-    this.initMemory();
-    // 
+	// Reset roles
+	Memory.rooms[this.name].roles = JSON.parse(JSON.stringify(Memory.roles));
+	// Reset mines
+	let toMines = Memory.rooms[this.name].toMines;
+	let rooms = [];
+	rooms[0] = this;
+	for(let i in rooms) {
+		let room = rooms[i];
+		let sources = room.find(FIND_SOURCES);
+		for(let j in sources) {
+			let source = sources[j];
+			if(!toMines[source.id]) {
+				toMines[source.id] = {};
+			}
+			if(!toMines[source.id].creeps) {
+				toMines[source.id].creeps = {};
+			}
+			toMines[source.id].id = source.id;
+		}
+	}
+}
+
+Room.prototype.main_ = function() {
+    // Roles
+	
+	//
     var sources = this.find(FIND_SOURCES);
     for(var j in sources) {
         var source = sources[j];
