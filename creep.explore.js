@@ -4,7 +4,7 @@ Creep.prototype.explore = function() {
 		let rooms = Memory.rooms[this.memory.originalRoom].rooms;
 		rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 		rooms = rooms.filter(function(room) {
-			return room.status == 'null';
+			return room.status == 'null' || room.status == 'youpi';
 		});
 		if(!rooms.length) {
 			this.say_('no room');
@@ -20,7 +20,7 @@ Creep.prototype.explore = function() {
 			&& roomName!=this.memory.originalRoom) {
 		this.say_('youpi');
 		this.moveTo(this.room.controller);
-		let room = Game.rooms[this.memory.originalRoom].addRoom(this.room.name);
+		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'youpi';
 		
 	} 
 	//
