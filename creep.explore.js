@@ -11,7 +11,7 @@ Creep.prototype.explore = function() {
 			return;
 		}
 		roomName = rooms[0].name;
-		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'explored';
+		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'exploring';
 	}
 	//
 	if(Game.map.isRoomAvailable(roomName)
