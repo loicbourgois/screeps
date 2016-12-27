@@ -209,9 +209,11 @@ Room.prototype.getRoomToManage = function() {
 	for(let i in Memory.rooms[this.name].rooms) {
 		let name = Memory.rooms[this.name].rooms[i].name;
 		let status = Memory.rooms[this.name].rooms[i].status;
-		if(status=='controlled'
+		let room = Game.rooms[name];
+		if((status=='controlled'
 				||status=='mined'
-				||status=='youpi') {
+				||status=='youpi')
+				&& room && room.controller) {
 			roomToManages.push(Game.rooms[name]);
 		}
 	}

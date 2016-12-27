@@ -202,7 +202,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 var min = sources.length * 2;
 				var max = 0;
 				for(var j in sources) {
-                    max += sources[j].energyCapacity/200;
+                    max += sources[j].energyCapacity/150;
                 }
                 role.min = min;
                 role.max = max;
