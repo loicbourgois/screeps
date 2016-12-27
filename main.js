@@ -34,7 +34,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'carrier',
-            'maxBodyType':2,
+            'maxBodyType':4,
             'bodyType':CARRY,
 			'body': {
                 'min':[MOVE, CARRY],
@@ -115,7 +115,9 @@ module.exports.loop = function () {
 	}
 	for(let i in Game.rooms) {
 		let room = Game.rooms[i];
-		if(!Memory.rooms[room.name] && room.controller.my) {
+		if(!Memory.rooms[room.name] 
+				&& room.controller 
+				&&room.controller.my) {
 			Memory.rooms[room.name] = {
 				name : room.name
 			}
@@ -123,6 +125,9 @@ module.exports.loop = function () {
 	}
 	for(let i in Memory.rooms) {
 		let room = Game.rooms[Memory.rooms[i].name];
+		if(!room) {
+		    continue;
+		}
 		room.main();
 	}
     // Creeps

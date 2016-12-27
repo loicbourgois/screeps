@@ -178,30 +178,6 @@ Spawn.prototype.createCreepMiner = function(role) {
     }
 }
 
-/*Spawn.prototype.getMySources = function() {
-	var room = this.room;
-	var sources = [];
-	var name = this.room.name;
-	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
-	rooms = rooms.filter(function (room) {
-		var same = (room.name==name);
-		var claimer = false;
-		var creeps = Game.creeps;
-		creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
-		creeps = creeps.filter(function (creep) {
-			return (creep.memory 
-					&& creep.memory.originalRoom == name 
-					&& creep.memory.roleId == "claimer");
-		});
-		claimer = creeps.length;
-		return (same || claimer);
-	});
-	for(var i in rooms) {
-		var sources = sources.concat(rooms[i].find(FIND_SOURCES));
-	}
-	return sources;
-}*/
-
 Spawn.prototype.getRoleToCreate = function() {
     // Set min & max
     let roles = Memory.rooms[this.room.name].roles;
@@ -225,19 +201,19 @@ Spawn.prototype.getRoleToCreate = function() {
             case 'carrier' : {
                 var sourceCount = sources.length;
                 role.min = sourceCount * 2;
-                role.max = sourceCount * 15;
+                role.max = sourceCount * 20;
                 role.minBodyCount = sourceCount * 2;
-                role.maxBodyCount = sourceCount * 15;
+                role.maxBodyCount = sourceCount * 20;
                 break;
             }
             case 'attacker' : {
                 role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
                 break;
             }
             case 'rangedAttacker' : {
                 role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4;
                 break;
             }
             case 'upgrader' : {
@@ -259,9 +235,9 @@ Spawn.prototype.getRoleToCreate = function() {
             }
 			case 'explorer' : {
                 role.min = 0;
-                role.max = 1;
+                role.max = 3 - this.room.getRoomCount();
                 role.minBodyCount = 0;
-                role.maxBodyCount = 1;
+                role.maxBodyCount = 3 - this.room.getRoomCount();
                 break;
             }
             default : {
