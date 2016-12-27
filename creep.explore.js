@@ -16,7 +16,7 @@ Creep.prototype.explore = function() {
 	//
 	if(Game.map.isRoomAvailable(roomName)
 			&& roomName == this.room.name
-			&& this.room.find(FIND_SOURCES).length >= 2
+			&& this.room.find(FIND_SOURCES).length >= 1
 			&& roomName!=this.memory.originalRoom) {
 		this.say_('youpi');
 		this.moveTo(this.room.controller);
@@ -44,7 +44,7 @@ Creep.prototype.explore = function() {
 			}
 		}
 	} else {
-		this.memory.tree.shift();
+		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'problem';
+		delete this.memory.roomName;
 	}
 }
-
