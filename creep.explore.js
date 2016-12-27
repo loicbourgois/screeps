@@ -16,7 +16,6 @@ Creep.prototype.explore = function() {
 			&& roomName!=this.memory.originalRoom) {
 		this.say_('youpi');
 		this.moveTo(this.room.controller);
-		
 		let room = Game.rooms[this.memory.originalRoom].addRoom(this.room.name);
 		
 	} 
@@ -31,6 +30,8 @@ Creep.prototype.explore = function() {
 			}
 			case ERR_NO_PATH: {
 				this.say_(code);
+				Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'problem';
+				delete this.memory.roomName;
 				break;
 			}
 			default : {
