@@ -1,5 +1,5 @@
 var USERNAME = _.find(Game.structures).owner.username;
-var ROOM_RADIUS = 3;
+var ROOM_RADIUS = 2;
 
 Room.prototype.main = function() {
 	this.reset_();

@@ -49,6 +49,7 @@ Creep.prototype.mine = function() {
             }
 			case ERR_INVALID_TARGET:{
                 this.say_("invalid target : "+this.memory.assignedSourceId);
+				delete this.memory.assignedSourceId;
                 break;
             }
             default:{

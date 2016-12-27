@@ -1,3 +1,5 @@
+var BONUS_NEEDED_WORKING = 0;
+
 Spawn.prototype.main = function() {
     var role, body;
     if(!(role = this.getRoleToCreate())) {
@@ -121,7 +123,7 @@ Spawn.prototype.createCreepMiner = function(role) {
         return;
     }
     var neededWorking = Game.getObjectById(assignedSourceId).getNeededWorking();
-    var maxBodyCount = neededWorking+1;
+    var maxBodyCount = neededWorking+BONUS_NEEDED_WORKING;
     var bodyCount = 0;
     // Min body
     var i = 0;
@@ -190,7 +192,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 var maxBodyCount = 0;
                 var max = 0;
                 for(var j in sources) {
-                    maxBodyCount += sources[j].energyCapacity/600 + 1;
+                    maxBodyCount += sources[j].energyCapacity/600 + BONUS_NEEDED_WORKING;
                     max += sources[j].getAllPositions().length;
                 }
                 role.max = max;
@@ -199,7 +201,7 @@ Spawn.prototype.getRoleToCreate = function() {
                 break;
             }
             case 'carrier' : {
-                var min = sources.length * 2;
+                var min = sources.length * 3;
 				var max = 0;
 				for(var j in sources) {
                     max += sources[j].energyCapacity/150;
