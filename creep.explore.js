@@ -6,6 +6,10 @@ Creep.prototype.explore = function() {
 		rooms = rooms.filter(function(room) {
 			return room.status == 'null';
 		});
+		if(!rooms.length) {
+			this.say_('no room');
+			return;
+		}
 		roomName = rooms[0].name;
 		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'explored';
 	}
