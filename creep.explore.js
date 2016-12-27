@@ -26,7 +26,7 @@ Creep.prototype.explore = function() {
 		let code;
 		switch(code = this.moveTo(new RoomPosition(25, 25, roomName))) {
 			case OK : {
-				this.say("going to "+roomName);
+				this.say_("goto "+roomName);
 				break;
 			}
 			case ERR_NO_PATH: {
