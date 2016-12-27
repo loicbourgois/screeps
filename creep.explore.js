@@ -8,6 +8,7 @@ Creep.prototype.explore = function() {
 		});
 		if(!rooms.length) {
 			this.say_('no room');
+			delete Memory.rooms[this.memory.originalRoom].rooms;
 			return;
 		}
 		roomName = rooms[0].name;
@@ -17,11 +18,11 @@ Creep.prototype.explore = function() {
 	if(Game.map.isRoomAvailable(roomName)
 			&& roomName == this.room.name
 			&& this.room.find(FIND_SOURCES).length >= 1
-			&& roomName!=this.memory.originalRoom) {
+			&& roomName!=this.memory.originalRoom
+			&& this.room.controller) {
 		this.say_('youpi');
 		this.moveTo(this.room.controller);
 		Memory.rooms[this.memory.originalRoom].rooms[roomName].status = 'youpi';
-		
 	} 
 	//
 	else if(Game.map.isRoomAvailable(roomName) 

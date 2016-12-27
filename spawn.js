@@ -194,16 +194,20 @@ Spawn.prototype.getRoleToCreate = function() {
                     max += sources[j].getAllPositions().length;
                 }
                 role.max = max;
-                role.maxBodyCount = maxBodyCount;
                 role.minBodyCount = sources.length;
+                role.maxBodyCount = maxBodyCount;
                 break;
             }
             case 'carrier' : {
-                var sourceCount = sources.length;
-                role.min = sourceCount * 2;
-                role.max = sourceCount * 20;
-                role.minBodyCount = sourceCount * 2;
-                role.maxBodyCount = sourceCount * 20;
+                var min = sources.length * 2;
+				var max = 0;
+				for(var j in sources) {
+                    max += sources[j].energyCapacity/200;
+                }
+                role.min = min;
+                role.max = max;
+                role.minBodyCount = min;
+                role.maxBodyCount = max;
                 break;
             }
             case 'attacker' : {

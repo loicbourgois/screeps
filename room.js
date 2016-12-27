@@ -1,4 +1,5 @@
 var USERNAME = _.find(Game.structures).owner.username;
+var ROOM_RADIUS = 3;
 
 Room.prototype.main = function() {
 	this.reset_();
@@ -34,8 +35,7 @@ Room.prototype.reset_ = function() {
 	if(! Memory.rooms[this.name].rooms) {
 		Memory.rooms[this.name].rooms = {};
 	}
-	let roomList = this.getRoomList(this.name, 2);
-	//console.log(JSON.stringify(roomList, null, 2));
+	let roomList = this.getRoomList(this.name, ROOM_RADIUS);
 	let rooms = Memory.rooms[this.name].rooms;
 	for(let i in roomList) {
 		let roomName = roomList[i];
