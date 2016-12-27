@@ -235,9 +235,9 @@ Spawn.prototype.getRoleToCreate = function() {
             }
 			case 'explorer' : {
                 role.min = 0;
-                role.max = 3 - this.room.getRoomCount();
+                role.max = 1;
                 role.minBodyCount = 0;
-                role.maxBodyCount = 3 - this.room.getRoomCount();
+                role.maxBodyCount = 1;
                 break;
             }
             default : {

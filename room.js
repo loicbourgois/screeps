@@ -55,18 +55,22 @@ Room.prototype.reset_ = function() {
 				return creep.memory.roleId == 'miner';
 			});
 			mined = mined.length;
-			if(room.controller.my) {
+			if(room.controller 
+			        && room.controller.my) {
 				rooms[roomName].status = 'controlled';
 			}
-			else if(room.controller.reservation
+			else if(room.controller
+			    && room.controller.reservation
 				&& room.controller.reservation.username == USERNAME) {
 				rooms[roomName].status = 'reserved';
 			}
-			else if(room.controller.owner
+			else if(room.controller
+			    && room.controller.owner
 				&& room.controller.owner.username != USERNAME) {
 				rooms[roomName].status = 'ennemyControlled';
 			}
-			else if(room.controller.reservation
+			else if(room.controller
+			    && room.controller.reservation
 				&& room.controller.reservation.username != USERNAME) {
 				rooms[roomName].status = 'ennemyReserved';
 			}
