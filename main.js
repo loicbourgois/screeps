@@ -4,6 +4,7 @@ require('creep.attack_');
 require('creep.build_');
 require('creep.carry_');
 require('creep.claim_');
+require('creep.explore');
 require('creep.mine');
 require('creep.upgrade');
 require('resource');
@@ -15,19 +16,21 @@ require('structure');
 require('structure.extension');
 
 module.exports.loop = function () {
-    console.log("--------------------------------");
+    console.log("----------------------------------------------------------------");
     // 
 	delete Memory.sources;
 	delete Memory.resources;
 	delete Memory.toMines;
+	delete Memory.toFills;
+	delete Memory.toEmptys;
 	// Roles
 	Memory.roles = [ {
             'id':'miner',
             'bodyType':WORK,
             'body': {
                 'min':[WORK, CARRY, CARRY, CARRY, MOVE],
-                'loop':[CARRY, WORK],
-                'filler':[CARRY]
+                'loop':[CARRY, MOVE, WORK],
+                'filler':[]
             }
         },{
             'id':'carrier',
@@ -83,6 +86,14 @@ module.exports.loop = function () {
                 'loop':[MOVE, CLAIM],
                 'filler':[TOUGH]
             }
+        },{
+            'id':'explorer',
+            'bodyType':MOVE,
+            'body': {
+                'min':[MOVE],
+                'loop':[],
+                'filler':[]
+            }
         }
     ];
     for(let i in Memory.roles) {
@@ -93,6 +104,11 @@ module.exports.loop = function () {
         role.count = 0;
         role.bodyCount = 0;
     }
+	for(var i in Memory.creeps) {
+		if(!Game.creeps[i]) {
+			delete Memory.creeps[i];
+		}
+	}
 	// Rooms
 	if(!Memory.rooms) {
 		Memory.rooms = {};
@@ -109,74 +125,6 @@ module.exports.loop = function () {
 		let room = Game.rooms[Memory.rooms[i].name];
 		room.main();
 	}
-	// Creeps
-	for(var i in Memory.creeps) {
-		if(!Game.creeps[i]) {
-			delete Memory.creeps[i];
-		}
-	}
-	// Clean toMines
-	for(var i in Memory.toMines) {
-	    if(!Game.getObjectById(Memory.toMines[i].id)) {
-	        delete Memory.toMines[i];
-	        continue;
-	    }
-		//try {
-		var username, my, res;
-		try {
-			my = Game.getObjectById(Memory.toMines[i].id).room.controller.my;
-		} catch (e) {}
-		try {
-			res = Game.getObjectById(Memory.toMines[i].id).room.controller.reservation;
-		} catch (e) {}
-		if(res) {
-			username = res.username;
-		}
-		if(!res && !my && username != 'loicbourgois') {
-			delete Memory.toMines[i];
-			continue;
-		}
-		for(var j in Memory.toMines[i].creeps){
-			if(!Game.getObjectById(Memory.toMines[i].creeps[j])) {
-				delete Memory.toMines[i].creeps[j];
-			}
-		}
-	}
-	// Clean toEmptys
-	for(var i in Memory.toEmptys) {
-		var object = Game.getObjectById(Memory.toEmptys[i].id);
-		if(!object) {
-			delete Memory.toEmptys[i];
-		}
-	}
-	// Clean toFills
-	for(var i in Memory.toFills) {
-		var object = Game.getObjectById(Memory.toFills[i].id);
-		if(!object) {
-			delete Memory.toFills[i];
-		}
-	}
-    // Rooms
-	var rooms = Game.rooms
-	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
-	rooms = rooms.filter(function (room) {
-		//try {
-			var my, res;
-			try {
-				my = room.controller.my;
-			} catch (e) {}
-			try {
-				res = room.controller.reservation;
-			} catch (e) {}
-			return (my || (res&&res.username == 'loicbourgois') );
-		/*} catch (e) {
-			return;
-		}*/
-	});
-    for(var i in rooms) {
-        var room = rooms[i];
-        room.main_();
-    }
     // Creeps
     var creeps = Game.creeps
     for(var i in creeps) {

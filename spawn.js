@@ -1,6 +1,5 @@
 Spawn.prototype.main = function() {
     var role, body;
-    this.addToToFills();
     if(!(role = this.getRoleToCreate())) {
         return;
     }
@@ -54,7 +53,7 @@ Spawn.prototype.getBody = function(role) {
 		i++;
 		i%=role.body.filler.length;
 	}
-	//console.log(role.id, JSON.stringify(body));
+	//this.say_(role.id, JSON.stringify(body));
     if(cost > this.room.energyAvailable) {
         return;
     }
@@ -118,7 +117,7 @@ Spawn.prototype.createCreepMiner = function(role) {
     }
     //
     if(!assignedSourceId) {
-        console.log("can't do worker");
+        this.say_("can't do worker");
         return;
     }
     var neededWorking = Game.getObjectById(assignedSourceId).getNeededWorking();
@@ -152,7 +151,8 @@ Spawn.prototype.createCreepMiner = function(role) {
     }
     // Filler
     var i = 0;
-    while(body.length < MAX_CREEP_SIZE
+    while(role.body.filler.length
+			&& body.length < MAX_CREEP_SIZE
             && cost + BODYPART_COST[role.body.loop[i]] <= this.room.energyAvailable) {
         cost += BODYPART_COST[role.body.loop[i]];
         body.push(role.body.filler[i]);
@@ -165,8 +165,12 @@ Spawn.prototype.createCreepMiner = function(role) {
         case ERR_BUSY: {
             break;
         }
+		case ERR_INVALID_ARGS: {
+			this.say_("can't do miner : ERR_INVALID_ARGS");
+            break;
+        }
         default: {
-            Memory.creeps[code].roleId = role.id;
+			Memory.creeps[code].roleId = role.id;
             Memory.creeps[code].assignedSourceId = assignedSourceId;
             Memory.creeps[code].originalRoom = this.room.name;
             break;
@@ -174,8 +178,8 @@ Spawn.prototype.createCreepMiner = function(role) {
     }
 }
 
-Spawn.prototype.getMySources = function() {
-	var rooms = Game.rooms;
+/*Spawn.prototype.getMySources = function() {
+	var room = this.room;
 	var sources = [];
 	var name = this.room.name;
 	rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
@@ -196,12 +200,12 @@ Spawn.prototype.getMySources = function() {
 		var sources = sources.concat(rooms[i].find(FIND_SOURCES));
 	}
 	return sources;
-}
+}*/
 
 Spawn.prototype.getRoleToCreate = function() {
     // Set min & max
     let roles = Memory.rooms[this.room.name].roles;
-	var sources = this.getMySources();
+	var sources = this.room.getMySources();
     //return findById(roles, 'carrier');
     for(var i in roles) {
 		let role=roles[i];
@@ -221,7 +225,7 @@ Spawn.prototype.getRoleToCreate = function() {
             case 'carrier' : {
                 var sourceCount = sources.length;
                 role.min = sourceCount * 2;
-                role.max = sourceCount * 10;
+                role.max = sourceCount * 15;
                 role.minBodyCount = sourceCount * 2;
                 role.maxBodyCount = sourceCount * 15;
                 break;
@@ -249,12 +253,19 @@ Spawn.prototype.getRoleToCreate = function() {
                 break;
             }
 			case 'claimer' : {
-                roles[i].min = 0;
-                roles[i].max = 0;
+                role.min = 0;
+                role.max = 0;
+                break;
+            }
+			case 'explorer' : {
+                role.min = 0;
+                role.max = 1;
+                role.minBodyCount = 0;
+                role.maxBodyCount = 1;
                 break;
             }
             default : {
-                this.say_("unknownm role!");
+                this.say_("unknownm role : "+role.id);
                 break;
             }
         }
@@ -308,10 +319,13 @@ Spawn.prototype.getRoleToCreate = function() {
     	        r.priority = 1 - r.priority;
     	    } 
 	    }
+		if(!r.priority) {
+			r.priority = 0;
+		}
 	}
 	// Sort
 	roles.sort(function(a, b) {
-        return parseFloat(b.priority) - parseFloat(a.priority);
+        return b.priority - a.priority;
     });
     // Logs
     var message = "";

@@ -1,6 +1,13 @@
 Source.prototype.main = function() {
-    //this.addToToMines();
+    this.say_("need "+this.getNeededWorking());
 };
+
+Source.prototype.say_ = function(message) {
+	console.log("source"
+		+ "\t"+this.room.name
+		+ "\t"+this.pos.x+","+this.pos.y
+		+ "\t"+message);
+}
 
 Source.prototype.getCreeps = function() {
 	let creeps;

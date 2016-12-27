@@ -1,5 +1,4 @@
 Creep.prototype.build_ = function() {
-    this.addToToFills();
     var sites = this.room.find(FIND_CONSTRUCTION_SITES);
     if(sites.length) {
         var site = sites[0];

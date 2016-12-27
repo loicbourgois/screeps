@@ -19,6 +19,8 @@ Creep.prototype.main = function() {
         this.build_();
     } else if (this.memory.roleId == 'claimer'){
         this.claim_();
+    } else if (this.memory.roleId == 'explorer'){
+        this.explore();
     }
 };
 
@@ -47,25 +49,22 @@ Creep.prototype.countBodyPart = function(bodyType) {
 Creep.prototype.assignCreepToFill = function(creepId, toFillId) {
     this.unassignCreepToEmpty();
     this.memory.toFillId = toFillId;
-    if(!Memory.toFills[toFillId].creeps) {
-        Memory.toFills[toFillId].creeps = {};
-    }
-    Memory.toFills[toFillId].creeps[creepId]=creepId;
+	let toFill = Memory.rooms[this.memory.originalRoom].toFills[toFillId];
+	toFill.creeps[creepId] = creepId;
 }
 Creep.prototype.unassignCreepToFill = function() {
     try {
-        delete Memory.toFills[this.memory.toFillId].creeps[this.id];
+		let toFill = Memory.rooms[this.memory.originalRoom].toFills[this.memory.toFillId];
+        delete toFill.creeps[this.id];
     } catch (e) {}
     this.memory.toFillId = null;
 }
 
 Creep.prototype.assignCreepToEmpty = function(creepId, toEmptyId) {
-    this.unassignCreepToFill(this.id, this.memory.toEmptyId);
+	this.unassignCreepToFill();
     this.memory.toEmptyId = toEmptyId;
-    if(!Memory.toEmptys[toEmptyId].creeps) {
-        Memory.toEmptys[toEmptyId].creeps = {};
-    }
-    Memory.toEmptys[toEmptyId].creeps[creepId] = creepId;
+	let toEmpty = Memory.rooms[this.memory.originalRoom].toEmptys[toEmptyId];
+	toEmpty.creeps[creepId] = creepId;
 }
 Creep.prototype.unassignCreepToEmpty = function() {
     try {
@@ -73,7 +72,7 @@ Creep.prototype.unassignCreepToEmpty = function() {
     } catch (e) {}
     this.memory.toEmptyId = null;
 }
-Creep.prototype.addToToEmptys = function() {
+/*Creep.prototype.addToToEmptys = function() {
     if(!Memory.toEmptys) {
         Memory.toEmptys = {};
     }
@@ -81,7 +80,7 @@ Creep.prototype.addToToEmptys = function() {
         Memory.toEmptys[this.id] = {};
     }
     Memory.toEmptys[this.id].id = this.id;
-}
+}*/
 
 
 // Carry

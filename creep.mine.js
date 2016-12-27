@@ -41,7 +41,6 @@ Creep.prototype.mine = function() {
         this.assignToMines();
         switch (code = this.harvest(Game.getObjectById(this.memory.assignedSourceId))) {
             case OK:{
-                this.addToToEmptys();
                 break;
             }
             case ERR_NOT_IN_RANGE:{
@@ -53,7 +52,7 @@ Creep.prototype.mine = function() {
                 break;
             }
             default:{
-                this.say_(code);
+                //this.say_(code);
                 break;
             }
         }
@@ -61,7 +60,9 @@ Creep.prototype.mine = function() {
 }
 
 Creep.prototype.assignToMines = function() {
-	let source = Game.getObjectById(this.memory.assignedSourceId);
-	let creeps = source.getCreeps();
-	creeps[this.id] = this.id;
+    try {
+    	let source = Game.getObjectById(this.memory.assignedSourceId);
+    	let creeps = source.getCreeps();
+    	creeps[this.id] = this.id;
+    } catch(e){}
 }
