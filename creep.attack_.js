@@ -1,7 +1,8 @@
 Creep.prototype.attack_ = function() {
     var ennemies = Game.rooms[this.memory.originalRoom].findEnnemies();
     if(!ennemies.length) {
-        this.moveTo(new RoomPosition(25, 25, this.memory.assignedRoomName));
+		if(this.memory.assignedRoomName)
+			this.moveTo(new RoomPosition(25, 25, this.memory.assignedRoomName));
         return;
     }
     var ennemy = ennemies[0];
