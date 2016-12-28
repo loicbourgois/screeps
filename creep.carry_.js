@@ -39,6 +39,9 @@ Creep.prototype.searchToFill = function() {
 	toFills = Object.keys(toFills).map(function (key) { return toFills[key]; });
 	let this_ = this;
 	toFills.sort(function(a, b) { 
+		if(!a) {
+			return 1;
+		}
 		var aObject = Game.getObjectById(a.id);
 		if(!aObject) {
 			delete Memory.toFills[a.id];
@@ -55,6 +58,9 @@ Creep.prototype.searchToFill = function() {
 			aFree -= creep.getTotalCarrying();
 		}
 		// b
+		if(!b) {
+			return -1;
+		}
 		var bObject = Game.getObjectById(b.id);
 		if(!bObject) {
 			delete Memory.toFills[b.id];

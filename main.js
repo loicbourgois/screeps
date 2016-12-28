@@ -16,12 +16,9 @@ require('structure');
 require('structure.extension');
 
 module.exports.loop = function () {
-	let mess = "################";
-	mess += "################";
-	mess += "################";
-	mess += "################";
-    console.log(mess);
-    // 
+	let cpu = 0;
+    console.log("####################################################################################");
+	// 
 	delete Memory.sources;
 	delete Memory.resources;
 	delete Memory.toMines;
@@ -119,6 +116,8 @@ module.exports.loop = function () {
 		creeps[i].main();
     }
     console.log("----------------------------------------------------------------");
+	let creepCpu = (Game.cpu.getUsed()-cpu);
+	cpu += creepCpu;
 	// Rooms
 	if(!Memory.rooms) {
 		Memory.rooms = {};
@@ -140,6 +139,11 @@ module.exports.loop = function () {
 		}
 		room.main();
 	}
-    // Stats
-    console.log("CPU : "+Game.cpu.getUsed());
+	let roomCpu = (Game.cpu.getUsed()-cpu);
+	cpu += roomCpu;
+    // CPU
+	console.log("----------------------------------------------------------------");
+	console.log("Creep CPU :\t"+ ("    " + creepCpu.toFixed(1)).slice(-5));
+	console.log("Room CPU :\t"+ ("    " + roomCpu.toFixed(1)).slice(-5));
+	console.log("CPU :\t\t"+ ("    " + cpu.toFixed(1)).slice(-5));
 }
