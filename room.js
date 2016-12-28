@@ -35,7 +35,7 @@ Room.prototype.reset_ = function() {
 	if(! Memory.rooms[this.name].rooms) {
 		Memory.rooms[this.name].rooms = {};
 	}
-	let roomList = this.getRoomList(this.name, ROOM_RADIUS);
+	let roomList = this.getRoomList(this.name, this.controller.level/3);
 	let rooms = Memory.rooms[this.name].rooms;
 	for(let i in roomList) {
 		let roomName = roomList[i];
@@ -88,7 +88,8 @@ Room.prototype.reset_ = function() {
 	}
 	// Rooms ?
 	let roomToManages = this.getRoomToManage();
-	console.log("Rooms: "+JSON.stringify(roomToManages.length, null, 2));
+	console.log("Rooms\t\t"+JSON.stringify(roomToManages.length, null, 2));
+	console.log("Max rooms\t" + roomList.length);
 	// Reset roles
 	Memory.rooms[this.name].roles = JSON.parse(JSON.stringify(Memory.roles));
 	// Reset toMines

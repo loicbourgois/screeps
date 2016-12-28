@@ -1,3 +1,84 @@
+Creep.prototype.assignCreepToFill = function(creepId, toFillId) {
+    this.unassignCreepToEmpty();
+    this.memory.toFillId = toFillId;
+	let toFill = Memory.rooms[this.memory.originalRoom].toFills[toFillId];
+	toFill.creeps[creepId] = creepId;
+}
+Creep.prototype.unassignCreepToFill = function() {
+    try {
+		let toFill = Memory.rooms[this.memory.originalRoom].toFills[this.memory.toFillId];
+        delete toFill.creeps[this.id];
+    } catch (e) {}
+    this.memory.toFillId = null;
+}
+
+Creep.prototype.assignCreepToEmpty = function(creepId, toEmptyId) {
+	this.unassignCreepToFill();
+    this.memory.toEmptyId = toEmptyId;
+	let toEmpty = Memory.rooms[this.memory.originalRoom].toEmptys[toEmptyId];
+	toEmpty.creeps[creepId] = creepId;
+}
+Creep.prototype.unassignCreepToEmpty = function() {
+    try {
+        delete Memory.toEmptys[this.memory.toEmptyId].creeps[this.id];
+    } catch (e) {}
+    this.memory.toEmptyId = null;
+}
+
+Creep.prototype.searchToFill = function() {
+	var toFills = Memory.rooms[this.memory.originalRoom].toFills;
+	if(!toFills) {
+		this.say_("no fill");
+		return;
+	}
+	// object to array
+	toFills = Object.keys(toFills).map(function (key) { return toFills[key]; });
+	for(let i in toFills) {
+		//console.log(JSON.stringify(toFills[i]));
+	}
+	let this_ = this;
+	toFills.sort(function(a, b) { 
+		//try {
+			// a
+			var aObject = Game.getObjectById(a.id);
+			if(!aObject) {
+				delete Memory.toFills[a.id];
+				return 1;
+			}
+			var aFree = aObject.getFreeCapacity();
+			var aMax = aObject.getMaxCapacity();
+			for(var i in a.creeps) {
+				var creep = Game.getObjectById(a.creeps[i]);
+				if(!creep) {
+					delete a.creeps[i];
+					continue;
+				}
+				aFree -= creep.getTotalCarrying();
+			}
+			// b
+			var bObject = Game.getObjectById(b.id);
+			if(!bObject) {
+				delete Memory.toFills[b.id];
+				return -1;
+			}
+			var bFree = bObject.getFreeCapacity();
+			var bMax = bObject.getMaxCapacity();
+			for(var i in b.creeps) {
+				var creep = Game.getObjectById(b.creeps[i]);
+				if(!creep) {
+					delete b.creeps[i];
+					continue;
+				}
+				bFree -= creep.getTotalCarrying();
+			}
+			return -(aFree/aMax-bFree/bMax);
+		//} catch(e) {
+		//	this_.say_(a.id+ " " + b.id);
+		//}
+	});
+	this.assignCreepToFill(this.id, toFills[0].id);
+}
+
 Creep.prototype.carry_ = function() {
     // Move & Fill
     if(this.memory.toFillId && this.getTotalCarrying()) {
@@ -14,10 +95,12 @@ Creep.prototype.carry_ = function() {
             }
             case ERR_FULL:{
                 this.unassignCreepToFill(this.id, toFill.id);
+				this.searchToFill();
                 break;
             }
             case ERR_INVALID_TARGET:{
                 this.unassignCreepToFill(this.id, toFill.id);
+				this.searchToFill();
                 break;
             }
             default: {
@@ -123,55 +206,54 @@ Creep.prototype.carry_ = function() {
     }
     // Search tofill
     else if(this.getTotalCarrying() && !this.memory.toFillId) {
-        var toFills = Memory.rooms[this.memory.originalRoom].toFills;
-        if(!toFills) {
-			this.say_("no fill");
-            return;
-        }
-        // object to array
-        toFills = Object.keys(toFills).map(function (key) { return toFills[key]; });
-        for(let i in toFills) {
-			//console.log(JSON.stringify(toFills[i]));
-		}
-		let this_ = this;
-		toFills.sort(function(a, b) { 
-			try {
-				// a
-				var aObject = Game.getObjectById(a.id);
-				if(!aObject) {
-					delete Memory.toFills[a.id];
-					return 1;
-				}
-				var aFree = aObject.getFreeCapacity();
-				for(var i in a.creeps) {
-					var creep = Game.getObjectById(a.creeps[i]);
-					if(!creep) {
-						delete a.creeps[i];
-						continue;
-					}
-					aFree -= creep.getTotalCarrying();
-				}
-				// b
-				var bObject = Game.getObjectById(b.id);
-				if(!bObject) {
-					delete Memory.toFills[b.id];
-					return -1;
-				}
-				var bFree = bObject.getFreeCapacity();
-				for(var i in b.creeps) {
-					var creep = Game.getObjectById(b.creeps[i]);
-					if(!creep) {
-						delete b.creeps[i];
-						continue;
-					}
-					bFree -= creep.getTotalCarrying();
-				}
-				return bFree-aFree;
-			} catch(e) {
-				this_.say_(a.id+ " " + b.id);
-			}
-		});
-		
-        this.assignCreepToFill(this.id, toFills[0].id);
+        this.searchToFill();
     }
+	// Build road
+	/*let roads = this.room.lookForAt(LOOK_STRUCTURES, this.pos);
+	roads = roads.filter(function(e) {
+		return e.structureType == STRUCTURE_ROAD;
+	});
+	if(!roads.length) {
+		let code;
+		switch(code = this.room.createConstructionSite(this.pos, STRUCTURE_ROAD)) {
+			case OK :
+			case ERR_INVALID_TARGET : {
+				let sites = this.room.lookForAt(LOOK_CONSTRUCTION_SITES, this.pos);
+				if(!sites.length) {
+					break;
+				}
+				let code2;
+				switch(code2 = this.build(sites[0])) {
+					case OK :
+					case ERR_NOT_ENOUGH_RESOURCES : {
+						break;
+					}
+					default : {
+						this.say_("2 "+code2);
+						break;
+					}
+				}
+				break;
+			}
+			case ERR_FULL : {
+				break;
+			}
+			default : {
+				this.say_(code);
+				break;
+			}
+		}
+	} else {
+		let code;
+		switch(code = this.repair(roads[0])) {
+			case OK :
+			case ERR_NOT_ENOUGH_RESOURCES : {
+				break;
+			}
+			default : {
+				this.say_(code);
+				break;
+			}
+		}
+	}*/
 }

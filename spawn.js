@@ -341,6 +341,9 @@ Spawn.prototype.getRoleToCreate = function() {
 Spawn.prototype.getFreeCapacity = function () {
     return this.energyCapacity - this.energy;
 }
+Spawn.prototype.getMaxCapacity = function () {
+    return this.energyCapacity;
+}
 
 function findById(source, id) {
   for (var i = 0; i < source.length; i++) {

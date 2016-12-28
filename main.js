@@ -60,21 +60,21 @@ module.exports.loop = function () {
                 'filler':[]
             }
         },{
-            'id':'attacker',
-			'maxBodyType':5,
-            'bodyType':ATTACK,
-			'body': {
-                'min':[ATTACK, MOVE],
-                'loop':[ATTACK, MOVE],
-                'filler':[TOUGH]
-            }
-        },{
             'id':'rangedAttacker',
 			'maxBodyType':5,
             'bodyType':RANGED_ATTACK,
 			'body': {
                 'min':[RANGED_ATTACK, MOVE],
                 'loop':[RANGED_ATTACK, MOVE],
+                'filler':[TOUGH]
+            }
+        },{
+            'id':'attacker',
+			'maxBodyType':5,
+            'bodyType':ATTACK,
+			'body': {
+                'min':[ATTACK, MOVE],
+                'loop':[ATTACK, MOVE],
                 'filler':[TOUGH]
             }
         },{

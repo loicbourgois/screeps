@@ -46,32 +46,7 @@ Creep.prototype.countBodyPart = function(bodyType) {
     return count;
 }
 
-Creep.prototype.assignCreepToFill = function(creepId, toFillId) {
-    this.unassignCreepToEmpty();
-    this.memory.toFillId = toFillId;
-	let toFill = Memory.rooms[this.memory.originalRoom].toFills[toFillId];
-	toFill.creeps[creepId] = creepId;
-}
-Creep.prototype.unassignCreepToFill = function() {
-    try {
-		let toFill = Memory.rooms[this.memory.originalRoom].toFills[this.memory.toFillId];
-        delete toFill.creeps[this.id];
-    } catch (e) {}
-    this.memory.toFillId = null;
-}
 
-Creep.prototype.assignCreepToEmpty = function(creepId, toEmptyId) {
-	this.unassignCreepToFill();
-    this.memory.toEmptyId = toEmptyId;
-	let toEmpty = Memory.rooms[this.memory.originalRoom].toEmptys[toEmptyId];
-	toEmpty.creeps[creepId] = creepId;
-}
-Creep.prototype.unassignCreepToEmpty = function() {
-    try {
-        delete Memory.toEmptys[this.memory.toEmptyId].creeps[this.id];
-    } catch (e) {}
-    this.memory.toEmptyId = null;
-}
 /*Creep.prototype.addToToEmptys = function() {
     if(!Memory.toEmptys) {
         Memory.toEmptys = {};
@@ -92,4 +67,7 @@ Creep.prototype.getTotalCarrying = function() {
 }
 Creep.prototype.getFreeCapacity = function () {
     return this.carryCapacity - _.sum(this.carry);
+}
+Creep.prototype.getMaxCapacity = function () {
+    return this.carryCapacity;
 }
