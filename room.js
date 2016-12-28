@@ -253,14 +253,12 @@ Room.prototype.findAllMyCreeps = function() {
 }
 
 Room.prototype.findMycreeps = function(roleId) {
-	let roomToManages = this.getRoomToManage();
-	let creeps = [];
-	for(let i in roomToManages) {
-		creeps = creeps.concat(roomToManages[i].find(FIND_MY_CREEPS));
-	}
-	creeps = creeps.filter(function(creep) {
-		return creep.memory.roleId == roleId;
-	})
+	let creeps = Game.creeps;
+	let name = this.name;
+	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
+	creeps = creeps.filter(function(creep){
+		return name == creep.memory.originalRoom && creep.memory.roleId == roleId;
+	});
 	return creeps;
 }
 
