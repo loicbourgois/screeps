@@ -17,7 +17,7 @@ require('structure.extension');
 require('constants');
 
 module.exports.loop = function () {
-	Game.CPU_LIMIT = Game.cpu.limit * Game.cpu.bucket / 10000;
+	Game.CPU_LIMIT = 2 * Game.cpu.limit * Game.cpu.bucket / 10000;
 	//
 	let cpu = 0;
     console.log("####################################################################################");
