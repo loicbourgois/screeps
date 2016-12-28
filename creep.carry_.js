@@ -35,10 +35,17 @@ Creep.prototype.assignCreepToFill = function(creepId, toFillId) {
 	toFill.creeps[creepId] = creepId;
 }
 Creep.prototype.unassignCreepToFill = function() {
-    try {
-		let toFill = Memory.rooms[this.memory.originalRoom].toFills[this.memory.toFillId];
-        delete toFill.creeps[this.id];
-    } catch (e) {}
+	let id = this.memory.toFillId;
+	let object = Game.getObjectById(id);
+	if(object) {
+		let roomName = this.memory.originalRoom;
+		if(Memory.rooms
+				&& Memory.rooms[roomName] 
+				&& Memory.rooms[roomName].toFills
+				&& Memory.rooms[roomName].toFills[id]) {
+			delete Memory.rooms[roomName].toFills[id].creeps[this.id];
+		}
+	}
     this.memory.toFillId = null;
 }
 

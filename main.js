@@ -152,7 +152,7 @@ module.exports.loop = function () {
 	cpu += roomCpu;
     // CPU
 	console.log("----------------------------------------------------------------");
-	console.log("Carry CPU :\t"+ ("    " + carryCpu.toFixed(1)).slice(-5));
+	console.log("Carry CPU\t"+ ("         " + carryCpu.toFixed(1)).slice(-8));
 	carryCpu = {
 		moveAndFill:0,
 		searchToEmpty:0,
@@ -168,11 +168,12 @@ module.exports.loop = function () {
 			carryCpu[j] = carryCpu[j] + cpuu[j];
 		}
     }
-		console.log("\tmoveAndFill :\t"+ ("    " + carryCpu.moveAndFill.toFixed(1)).slice(-5));
-		console.log("\tsearchToEmpty :\t"+ ("    " + carryCpu.searchToEmpty.toFixed(1)).slice(-5));
-		console.log("\tmoveAndEmpty :\t"+ ("    " + carryCpu.moveAndEmpty.toFixed(1)).slice(-5));
-		console.log("\tsearchToFill :\t"+ ("    " + carryCpu.searchToFill.toFixed(1)).slice(-5));
-	console.log("Other CPU :\t"+ ("    " + otherCreepCpu.toFixed(1)).slice(-5));
-	console.log("Room CPU :\t"+ ("    " + roomCpu.toFixed(1)).slice(-5));
-	console.log("Total CPU :\t"+ ("    " + cpu.toFixed(1)).slice(-5));
+		console.log("\tmoveAndFill\t"+ ("            " + carryCpu.moveAndFill.toFixed(1)).slice(-8));
+		console.log("\tsearchToEmpty\t"+ ("      " + carryCpu.searchToEmpty.toFixed(1)).slice(-8));
+		console.log("\tmoveAndEmpty\t"+ ("     " + carryCpu.moveAndEmpty.toFixed(1)).slice(-8));
+		console.log("\tsearchToFill\t"+ ("      " + carryCpu.searchToFill.toFixed(1)).slice(-8));
+	console.log("Other CPU\t"+ ("     " + otherCreepCpu.toFixed(1)).slice(-8));
+	console.log("Room CPU\t"+ ("     " + roomCpu.toFixed(1)).slice(-8));
+	console.log("Total CPU\t"+ ("     " + cpu.toFixed(1)).slice(-8));
+	console.log("Bucket\t\t"+ ("     " + Game.cpu.bucket.toFixed(1)).slice(-8));
 }
