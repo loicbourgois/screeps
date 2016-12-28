@@ -6,6 +6,7 @@ Room.prototype.main = function() {
 	this.handleSources();
 	this.handleResources();
 	this.handleSpawns();
+	this.handleCreeps();
 }
 
 Room.prototype.getRoomList = function(roomName, count) {
@@ -240,6 +241,15 @@ Room.prototype.reset_ = function() {
 	}
 }
 
+Room.prototype.findAllMyCreeps = function() {
+	let roomToManages = this.getRoomToManage();
+	let creeps = [];
+	for(let i in roomToManages) {
+		creeps = creeps.concat(roomToManages[i].find(FIND_MY_CREEPS));
+	}
+	return creeps;
+}
+
 Room.prototype.findMycreeps = function(roleId) {
 	let roomToManages = this.getRoomToManage();
 	let creeps = [];
@@ -251,6 +261,9 @@ Room.prototype.findMycreeps = function(roleId) {
 	})
 	return creeps;
 }
+
+
+
 
 Room.prototype.getRoomToManage = function() {
 	let roomToManages = [];
@@ -346,4 +359,58 @@ Room.prototype.getHostileBodycount = function() {
 		count += body.length;
 	}
 	return count;
+}
+
+
+Room.prototype.handleCreeps = function() {
+	let startCpu = Game.cpu.getUsed();
+    var creeps = this.findAllMyCreeps();
+    //
+	for(var i in creeps) {
+		if(creeps[i].memory.roleId != 'carrier') {
+			creeps[i].main();
+			if(Game.cpu.getUsed()>Game.CPU_LIMIT ) {
+				break;
+			}
+		}
+    }
+    let otherCreepCpu = (Game.cpu.getUsed()-startCpu);
+	startCpu = Game.cpu.getUsed();
+	//
+	for(var i in creeps) {
+		if(creeps[i].memory.roleId == 'carrier') {
+			creeps[i].main();
+			if(Game.cpu.getUsed()>Game.CPU_LIMIT ) {
+				break;
+			}
+		}
+    }
+	let carryCpu = (Game.cpu.getUsed()-startCpu);
+	let creepCpu = carryCpu + otherCreepCpu;
+	//
+	console.log("----------------------------------------------------------------");
+	console.log("Creep CPU\t"+ ("         " + creepCpu.toFixed(1)).slice(-8));
+		console.log("\tOther CPU\t"+ ("         " + otherCreepCpu.toFixed(1)).slice(-8));
+		console.log("\tCarry CPU\t"+ ("         " + carryCpu.toFixed(1)).slice(-8));
+		carryCpu = {
+			moveAndFill:0,
+			searchToEmpty:0,
+			moveAndEmpty:0,
+			searchToFill:0,
+		};
+		for(var i in creeps) {
+			let cpuu = creeps[i].memory.cpu;
+			for(let j in cpuu) {
+				if(!carryCpu[j]) {
+					carryCpu[j] = 0;
+				}
+				carryCpu[j] = carryCpu[j] + cpuu[j];
+			}
+		}
+			console.log("\t\tmoveAndFill\t"+ ("            " + carryCpu.moveAndFill.toFixed(1)).slice(-8));
+			console.log("\t\tsearchToEmpty\t"+ ("      " + carryCpu.searchToEmpty.toFixed(1)).slice(-8));
+			console.log("\t\tmoveAndEmpty\t"+ ("     " + carryCpu.moveAndEmpty.toFixed(1)).slice(-8));
+			console.log("\t\tsearchToFill\t"+ ("      " + carryCpu.searchToFill.toFixed(1)).slice(-8));
+		
+	
 }

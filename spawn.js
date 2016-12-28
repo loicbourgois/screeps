@@ -239,8 +239,8 @@ Spawn.prototype.getRoleToCreate = function() {
             case 'builder' : {
                 role.min = 0;
                 role.max = 2;
-                role.minBodyCount = role.min;
-                role.maxBodyCount = role.max;
+                role.minBodyCount = 1;
+                role.maxBodyCount = this.room.controller.level*role.max;
                 break;
             }
 			case 'claimer' : {
