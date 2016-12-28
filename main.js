@@ -153,12 +153,12 @@ module.exports.loop = function () {
     // CPU
 	console.log("----------------------------------------------------------------");
 	console.log("Carry CPU :\t"+ ("    " + carryCpu.toFixed(1)).slice(-5));
-	console.log("Other CPU :\t"+ ("    " + otherCreepCpu.toFixed(1)).slice(-5));
-	console.log("Room CPU :\t"+ ("    " + roomCpu.toFixed(1)).slice(-5));
-	console.log("Total CPU :\t"+ ("    " + cpu.toFixed(1)).slice(-5));
-	// CPU carry
-	console.log("----------------------------------------------------------------");
-	carryCpu = {};
+	carryCpu = {
+		moveAndFill:0,
+		searchToEmpty:0,
+		moveAndEmpty:0,
+		searchToFill:0,
+	};
 	for(var i in creeps) {
 		let cpuu = creeps[i].memory.cpu;
 		for(let j in cpuu) {
@@ -168,5 +168,11 @@ module.exports.loop = function () {
 			carryCpu[j] = carryCpu[j] + cpuu[j];
 		}
     }
-	console.log(JSON.stringify(carryCpu, null, 1));
+		console.log("\tmoveAndFill :\t"+ ("    " + carryCpu.moveAndFill.toFixed(1)).slice(-5));
+		console.log("\tsearchToEmpty :\t"+ ("    " + carryCpu.searchToEmpty.toFixed(1)).slice(-5));
+		console.log("\tmoveAndEmpty :\t"+ ("    " + carryCpu.moveAndEmpty.toFixed(1)).slice(-5));
+		console.log("\tsearchToFill :\t"+ ("    " + carryCpu.searchToFill.toFixed(1)).slice(-5));
+	console.log("Other CPU :\t"+ ("    " + otherCreepCpu.toFixed(1)).slice(-5));
+	console.log("Room CPU :\t"+ ("    " + roomCpu.toFixed(1)).slice(-5));
+	console.log("Total CPU :\t"+ ("    " + cpu.toFixed(1)).slice(-5));
 }
