@@ -53,9 +53,12 @@ Creep.prototype.unassignCreepToEmpty = function() {
 	let object = Game.getObjectById(id);
 	if(object) {
 		let roomName = object.getOriginalRoomName();
-		try {
+		if(Memory.rooms
+				&& Memory.rooms[roomName] 
+				&& Memory.rooms[roomName].toEmptys
+				&& Memory.rooms[roomName].toEmptys[id]) {
 			delete Memory.rooms[roomName].toEmptys[id].creeps[this.id];
-		} catch(e) {}
+		}
 	}
     this.memory.toEmptyId = null;
 }

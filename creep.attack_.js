@@ -1,7 +1,7 @@
 Creep.prototype.attack_ = function() {
-    var ennemies = this.room.find(FIND_HOSTILE_CREEPS);
+    var ennemies = Game.rooms[this.memory.originalRoom].findEnnemies();
     if(!ennemies.length) {
-        this.moveTo(25,25);
+        this.moveTo(new RoomPosition(25, 25, this.memory.assignedRoomName));
         return;
     }
     var ennemy = ennemies[0];
@@ -17,10 +17,14 @@ Creep.prototype.attack_ = function() {
     }
 }
 
+Creep.prototype.assignRoom = function(roomName) {
+	this.memory.assignedRoomName = roomName;
+}
+
 Creep.prototype.rangedAttack_ = function() {
-    var ennemies = this.room.find(FIND_HOSTILE_CREEPS);
+    var ennemies = Game.rooms[this.memory.originalRoom].findEnnemies();
     if(!ennemies.length) {
-        this.moveTo(25,25);
+        this.moveTo(new RoomPosition(25, 25, this.memory.assignedRoomName));
         return;
     }
     var ennemy = ennemies[0];

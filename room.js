@@ -223,10 +223,38 @@ Room.prototype.reset_ = function() {
 			}
 		}
 	}
+	// Attackers
+	let attackers = this.findMycreeps('attacker');
+	for(let i in attackers) {
+		let attacker = attackers[i];
+		if(!attacker.memory.assignedRoomName) {
+			attacker.assignRoom(roomToManages[i%roomToManages.length].name);
+		}
+	}
+	attackers = this.findMycreeps('rangedAttacker');
+	for(let i in attackers) {
+		let attacker = attackers[i];
+		if(!attacker.memory.assignedRoomName) {
+			attacker.assignRoom(roomToManages[i%roomToManages.length].name);
+		}
+	}
+}
+
+Room.prototype.findMycreeps = function(roleId) {
+	let roomToManages = this.getRoomToManage();
+	let creeps = [];
+	for(let i in roomToManages) {
+		creeps = creeps.concat(roomToManages[i].find(FIND_MY_CREEPS));
+	}
+	creeps = creeps.filter(function(creep) {
+		return creep.memory.roleId == roleId;
+	})
+	return creeps;
 }
 
 Room.prototype.getRoomToManage = function() {
 	let roomToManages = [];
+	
 	for(let i in Memory.rooms[this.name].rooms) {
 		let name = Memory.rooms[this.name].rooms[i].name;
 		let status = Memory.rooms[this.name].rooms[i].status;
@@ -239,6 +267,15 @@ Room.prototype.getRoomToManage = function() {
 		}
 	}
 	return roomToManages;
+}
+
+Room.prototype.findEnnemies = function() {
+	let roomToManages = this.getRoomToManage();
+	let en = [];
+	for(let i in roomToManages) {
+		en = en.concat(roomToManages[i].find(FIND_HOSTILE_CREEPS));
+	}
+	return en;
 }
 
 Room.prototype.getRoomCount = function() {

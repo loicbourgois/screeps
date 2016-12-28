@@ -214,23 +214,26 @@ Spawn.prototype.getRoleToCreate = function() {
             }
             case 'attacker' : {
                 role.min = hostileBodyCount * 1 + 1;
-                role.max = hostileBodyCount * 4 + roomCount;
-                role.minBodyCount = role.min;
-                role.maxBodyCount = role.max;
+                role.max = hostileBodyCount * 4 + roomCount + 1;
+                //role.minBodyCount = role.min;
+                //role.maxBodyCount = role.max;
                 break;
             }
             case 'rangedAttacker' : {
                 role.min = hostileBodyCount * 1 + 1;
-                role.max = hostileBodyCount * 4 + roomCount;
-                role.minBodyCount = role.min;
-                role.maxBodyCount = role.max;
+                role.max = hostileBodyCount * 4 + roomCount + 1;
+                //role.minBodyCount = 0;
+                //role.maxBodyCount = role.max;
                 break;
             }
             case 'upgrader' : {
                 role.min = 1;
                 role.max = 3;
                 role.minBodyCount = 1;
-                role.maxBodyCount = role.max * role.maxBodyType;
+                role.maxBodyCount = this.room.controller.level*2*role.max;
+				if(this.room.controller.level >= 8) {
+					role.maxBodyCount = CONTROLLER_MAX_UPGRADE_PER_TICK;
+				}
                 break;
             }
             case 'builder' : {
@@ -320,25 +323,25 @@ Spawn.prototype.getRoleToCreate = function() {
     // Logs
 	console.log("----------------------------------------------------------------");
     var message = "";
-    while(message.length < 16) {
+    while(message.length < 12) {
         message = message + " ";
     }
-    message += "\tcount\t";
-    message += "\t\tbody count";
-    message += "\t\tprio";
+    message += "\tprio";
+    message += "\tbody count";
+    message += "\t\tcount\t";
     console.log(message);
     for(var i in roles) {
         var message = roles[i].id;
-	    while(message.length < 16) {
+	    while(message.length < 12) {
 	        message = message + " ";
 	    }
-        message += "\t" + ("   " + roles[i].min).slice(-4) 
-			+ " ." + ("   " + roles[i].count).slice(-4) 
-            + " ." + ("   " + roles[i].max).slice(-4) ;
+        message += "\t" + roles[i].priority.toFixed(2);
         message += "\t" + ("   " + roles[i].minBodyCount).slice(-4) 
 			+ " ." + ("   " + roles[i].bodyCount).slice(-4) 
             + " ." + ("    " + Math.round(roles[i].maxBodyCount)).slice(-4) ;
-        message += "\t" + roles[i].priority.toFixed(2);
+        message += "\t" + ("   " + roles[i].min).slice(-4) 
+			+ " ." + ("   " + roles[i].count).slice(-4) 
+            + " ." + ("   " + roles[i].max).slice(-4) ;
 	    console.log(message);
     }
     //

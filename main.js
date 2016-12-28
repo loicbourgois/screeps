@@ -35,7 +35,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'carrier',
-            'maxBodyType':4,
+            'maxBodyType':10,
             'bodyType':CARRY,
 			'body': {
                 'min':[MOVE, CARRY],
@@ -44,7 +44,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'rangedAttacker',
-			'maxBodyType':5,
+			'maxBodyType':MAX_CREEP_SIZE/3,
             'bodyType':RANGED_ATTACK,
 			'body': {
                 'min':[RANGED_ATTACK, MOVE],
@@ -53,7 +53,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'attacker',
-			'maxBodyType':5,
+			'maxBodyType':MAX_CREEP_SIZE/3,
             'bodyType':ATTACK,
 			'body': {
                 'min':[ATTACK, MOVE],
@@ -62,7 +62,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'upgrader',
-            'maxBodyType':5,
+            'maxBodyType':MAX_CREEP_SIZE,
             'bodyType':WORK,
 			'body': {
                 'min':[CARRY, WORK, MOVE],
@@ -71,7 +71,7 @@ module.exports.loop = function () {
             }
         },{
             'id':'builder',
-            'maxBodyType':5,
+            'maxBodyType':MAX_CREEP_SIZE,
             'bodyType':WORK,
 			'body': {
                 'min':[CARRY, WORK, MOVE],
