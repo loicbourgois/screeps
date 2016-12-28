@@ -113,11 +113,20 @@ module.exports.loop = function () {
 	// Creeps
     var creeps = Game.creeps
     for(var i in creeps) {
-		creeps[i].main();
+		if(creeps[i].memory.roleId == 'carrier') {
+			creeps[i].main();
+		}
+    }
+	let carryCpu = (Game.cpu.getUsed()-cpu);
+	cpu += carryCpu;
+	for(var i in creeps) {
+		if(creeps[i].memory.roleId != 'carrier') {
+			creeps[i].main();
+		}
     }
     console.log("----------------------------------------------------------------");
-	let creepCpu = (Game.cpu.getUsed()-cpu);
-	cpu += creepCpu;
+	let otherCreepCpu = (Game.cpu.getUsed()-cpu);
+	cpu += otherCreepCpu;
 	// Rooms
 	if(!Memory.rooms) {
 		Memory.rooms = {};
@@ -143,7 +152,21 @@ module.exports.loop = function () {
 	cpu += roomCpu;
     // CPU
 	console.log("----------------------------------------------------------------");
-	console.log("Creep CPU :\t"+ ("    " + creepCpu.toFixed(1)).slice(-5));
+	console.log("Carry CPU :\t"+ ("    " + carryCpu.toFixed(1)).slice(-5));
+	console.log("Other CPU :\t"+ ("    " + otherCreepCpu.toFixed(1)).slice(-5));
 	console.log("Room CPU :\t"+ ("    " + roomCpu.toFixed(1)).slice(-5));
-	console.log("CPU :\t\t"+ ("    " + cpu.toFixed(1)).slice(-5));
+	console.log("Total CPU :\t"+ ("    " + cpu.toFixed(1)).slice(-5));
+	// CPU carry
+	console.log("----------------------------------------------------------------");
+	carryCpu = {};
+	for(var i in creeps) {
+		let cpuu = creeps[i].memory.cpu;
+		for(let j in cpuu) {
+			if(!carryCpu[j]) {
+				carryCpu[j] = 0;
+			}
+			carryCpu[j] = carryCpu[j] + cpuu[j];
+		}
+    }
+	console.log(JSON.stringify(carryCpu, null, 1));
 }
