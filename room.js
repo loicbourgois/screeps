@@ -242,11 +242,13 @@ Room.prototype.reset_ = function() {
 }
 
 Room.prototype.findAllMyCreeps = function() {
-	let roomToManages = this.getRoomToManage();
-	let creeps = [];
-	for(let i in roomToManages) {
-		creeps = creeps.concat(roomToManages[i].find(FIND_MY_CREEPS));
-	}
+	//let roomToManages = this.getRoomToManage();
+	let creeps = Game.creeps;
+	let name = this.name;
+	creeps = Object.keys(creeps).map(function (key) { return creeps[key]; });
+	creeps = creeps.filter(function(creep){
+		return name == creep.memory.originalRoom;
+	});
 	return creeps;
 }
 

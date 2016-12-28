@@ -1,5 +1,6 @@
 Creep.prototype.explore = function() {
 	//return;
+	console.log(this.room.name, this.pos.x, this.pos.y);
 	let roomName = this.memory.roomName;
 	if(!roomName) {
 		let rooms = Memory.rooms[this.memory.originalRoom].rooms;
@@ -22,7 +23,7 @@ Creep.prototype.explore = function() {
 	if(Game.map.isRoomAvailable(roomName)
 			&& roomName == this.room.name
 			&& this.room.find(FIND_SOURCES).length >= 1
-			&& roomName!=this.memory.originalRoom
+			&& roomName != this.memory.originalRoom
 			&& this.room.controller) {
 		this.say_('youpi');
 		this.moveTo(this.room.controller);
