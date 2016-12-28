@@ -379,6 +379,7 @@ Room.prototype.handleCreeps = function() {
     let otherCreepCpu = (Game.cpu.getUsed()-startCpu);
 	startCpu = Game.cpu.getUsed();
 	//
+	creeps = this.findMycreeps('carrier').reverse();
 	for(var i in creeps) {
 		if(creeps[i].memory.roleId == 'carrier') {
 			creeps[i].main();

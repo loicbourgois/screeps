@@ -1,6 +1,4 @@
 Creep.prototype.explore = function() {
-	//return;
-	console.log(this.room.name, this.pos.x, this.pos.y);
 	let roomName = this.memory.roomName;
 	if(!roomName) {
 		let rooms = Memory.rooms[this.memory.originalRoom].rooms;
