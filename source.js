@@ -1,9 +1,9 @@
 Source.prototype.main = function() {
-    this.say_("need "+this.getNeededWorking());
+    this.say_(this.getNeededWorking());
 };
 
 Source.prototype.say_ = function(message) {
-	console.log("source"
+	console.log("mine"
 		+ "\t"+this.room.name
 		+ "\t"+this.pos.x+","+this.pos.y
 		+ "\t"+message);

@@ -23,6 +23,9 @@ Creep.prototype.main = function() {
         this.explore();
     }
 };
+Creep.prototype.getOriginalRoomName = function(pos) {
+	return this.memory.originalRoom;
+}
 
 Creep.prototype.sayMoving = function(pos) {
 	//this.say(pos.x+"  "+pos.y);

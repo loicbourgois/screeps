@@ -4,6 +4,7 @@ var ROOM_RADIUS = 2;
 Room.prototype.main = function() {
 	this.reset_();
 	this.handleSources();
+	this.handleResources();
 	this.handleSpawns();
 }
 
@@ -92,6 +93,26 @@ Room.prototype.reset_ = function() {
 	console.log("Max rooms\t" + roomList.length);
 	// Reset roles
 	Memory.rooms[this.name].roles = JSON.parse(JSON.stringify(Memory.roles));
+	
+	// Reset resources
+	if(!Memory.resources) {
+		Memory.resources = {};
+	}
+	for(let i in roomToManages) {
+		let room = roomToManages[i];
+		let droppedEnergies = room.find(FIND_DROPPED_ENERGY);
+		for(let j in droppedEnergies) {
+			let id = droppedEnergies[j].id;
+			if(!Memory.resources[id]) {
+				Memory.resources[id] = {};
+			}
+			if(!Memory.resources[id].originalRoom) {
+				Memory.resources[id].originalRoom = {};
+			}
+			Memory.resources[id].originalRoom.name = this.name;
+		}
+	}
+	
 	// Reset toMines
 	if(! Memory.rooms[this.name].toMines) {
 		Memory.rooms[this.name].toMines = {};
@@ -193,15 +214,14 @@ Room.prototype.reset_ = function() {
 		let object = Game.getObjectById(toEmptys[i].id);
 		if(!object) {
 			delete toEmptys[i];
+			continue;
 		}
-		try {
-			for(let j in toEmptys[i].creeps) {
-				let object = Game.getObjectById(toEmptys[i].creeps[j]);
-				if(!object) {
-					delete toEmptys[i].creeps[j];
-				}
+		for(let j in toEmptys[i].creeps) {
+			let object = Game.getObjectById(toEmptys[i].creeps[j]);
+			if(!object) {
+				delete toEmptys[i].creeps[j];
 			}
-		} catch (e){}
+		}
 	}
 }
 
@@ -257,4 +277,36 @@ Room.prototype.handleSpawns = function() {
     for(var i in spawns) {
         spawns[i].main();
     }
+}
+
+Room.prototype.handleResources = function() {
+	let roomToManages = this.getRoomToManage();
+	let resources = []
+	for(let i in roomToManages) {
+		let room = roomToManages[i];
+		resources = resources.concat(room.find(FIND_DROPPED_ENERGY));
+	}
+    for(var i in resources) {
+        resources[i].main();
+    }
+}
+
+Room.prototype.getHostileBodycount = function() {
+	let roomToManages = this.getRoomToManage();
+	let hostiles = []
+	let count = 0;
+	for(let i in roomToManages) {
+		let room = roomToManages[i];
+		hostiles = hostiles.concat(room.find(FIND_HOSTILE_CREEPS));
+	}
+	console.log(hostiles.length);
+	for (let i in hostiles) {
+		let hostile = hostiles[i];
+		let body = hostile.body;
+		body = body.filter(function(part) {
+			return part.type == ATTACK || part.type == RANGED_ATTACK;
+		});
+		count += body.length;
+	}
+	return count;
 }

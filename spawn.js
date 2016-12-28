@@ -184,6 +184,8 @@ Spawn.prototype.getRoleToCreate = function() {
     // Set min & max
     let roles = Memory.rooms[this.room.name].roles;
 	var sources = this.room.getMySources();
+	let hostileBodyCount = this.room.getHostileBodycount();
+	let roomCount = this.room.getRoomToManage().length;
     //return findById(roles, 'carrier');
     for(var i in roles) {
 		let role=roles[i];
@@ -201,25 +203,27 @@ Spawn.prototype.getRoleToCreate = function() {
                 break;
             }
             case 'carrier' : {
-                var min = sources.length * 3;
 				var max = 0;
 				for(var j in sources) {
-                    max += sources[j].energyCapacity/150;
+                    max += sources[j].energyCapacity/100;
                 }
-                role.min = min;
                 role.max = max;
-                role.minBodyCount = min;
+                role.minBodyCount = sources.length;
                 role.maxBodyCount = max;
                 break;
             }
             case 'attacker' : {
-                role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.min = hostileBodyCount * 1 + 1;
+                role.max = hostileBodyCount * 4 + roomCount;
+                role.minBodyCount = role.min;
+                role.maxBodyCount = role.max;
                 break;
             }
             case 'rangedAttacker' : {
-                role.min = this.room.find(FIND_HOSTILE_CREEPS).length * 1;
-                role.max = this.room.find(FIND_HOSTILE_CREEPS).length * 4+1;
+                role.min = hostileBodyCount * 1 + 1;
+                role.max = hostileBodyCount * 4 + roomCount;
+                role.minBodyCount = role.min;
+                role.maxBodyCount = role.max;
                 break;
             }
             case 'upgrader' : {
@@ -232,18 +236,22 @@ Spawn.prototype.getRoleToCreate = function() {
             case 'builder' : {
                 role.min = 0;
                 role.max = 2;
+                role.minBodyCount = role.min;
+                role.maxBodyCount = role.max;
                 break;
             }
 			case 'claimer' : {
                 role.min = 0;
                 role.max = 0;
+                role.minBodyCount = role.min;
+                role.maxBodyCount = role.max;
                 break;
             }
 			case 'explorer' : {
                 role.min = 0;
                 role.max = 1;
-                role.minBodyCount = 0;
-                role.maxBodyCount = 1;
+                role.minBodyCount = role.min;
+                role.maxBodyCount = role.max;
                 break;
             }
             default : {
@@ -310,23 +318,26 @@ Spawn.prototype.getRoleToCreate = function() {
         return b.priority - a.priority;
     });
     // Logs
+	console.log("----------------------------------------------------------------");
     var message = "";
     while(message.length < 16) {
         message = message + " ";
     }
     message += "\tcount\t";
-    message += "\tbody count";
-    message += "\tprio";
+    message += "\t\tbody count";
+    message += "\t\tprio";
     console.log(message);
     for(var i in roles) {
         var message = roles[i].id;
 	    while(message.length < 16) {
 	        message = message + " ";
 	    }
-        message += "\t" + ("   " + roles[i].count).slice(-3) 
-            + " /" + ("   " + roles[i].max).slice(-3) ;
-        message += "\t" + ("    " + roles[i].bodyCount).slice(-4) 
-            + " /" + ("    " + Math.round(roles[i].maxBodyCount)).slice(-4) ;
+        message += "\t" + ("   " + roles[i].min).slice(-4) 
+			+ " ." + ("   " + roles[i].count).slice(-4) 
+            + " ." + ("   " + roles[i].max).slice(-4) ;
+        message += "\t" + ("   " + roles[i].minBodyCount).slice(-4) 
+			+ " ." + ("   " + roles[i].bodyCount).slice(-4) 
+            + " ." + ("    " + Math.round(roles[i].maxBodyCount)).slice(-4) ;
         message += "\t" + roles[i].priority.toFixed(2);
 	    console.log(message);
     }

@@ -1,10 +1,7 @@
 Creep.prototype.attack_ = function() {
     var ennemies = this.room.find(FIND_HOSTILE_CREEPS);
     if(!ennemies.length) {
-        var flags = this.room.find(FIND_FLAGS, {
-            filter: {  name: 'casern-'+this.room.name}
-        });
-        this.moveTo(flags[0]);
+        this.moveTo(25,25);
         return;
     }
     var ennemy = ennemies[0];
@@ -23,10 +20,7 @@ Creep.prototype.attack_ = function() {
 Creep.prototype.rangedAttack_ = function() {
     var ennemies = this.room.find(FIND_HOSTILE_CREEPS);
     if(!ennemies.length) {
-        var flags = this.room.find(FIND_FLAGS, {
-            filter: {  name: 'casern-'+this.room.name}
-        });
-        this.moveTo(flags[0]);
+        this.moveTo(25,25);
         return;
     }
     var ennemy = ennemies[0];

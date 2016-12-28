@@ -16,7 +16,11 @@ require('structure');
 require('structure.extension');
 
 module.exports.loop = function () {
-    console.log("----------------------------------------------------------------");
+	let mess = "################";
+	mess += "################";
+	mess += "################";
+	mess += "################";
+    console.log(mess);
     // 
 	delete Memory.sources;
 	delete Memory.resources;
@@ -42,24 +46,6 @@ module.exports.loop = function () {
                 'filler':[]
             }
         },{
-            'id':'upgrader',
-            'maxBodyType':5,
-            'bodyType':WORK,
-			'body': {
-                'min':[CARRY, WORK, MOVE],
-                'loop':[WORK, CARRY, MOVE],
-                'filler':[]
-            }
-        },{
-            'id':'builder',
-            'maxBodyType':5,
-            'bodyType':WORK,
-			'body': {
-                'min':[CARRY, WORK, MOVE],
-                'loop':[WORK, CARRY, MOVE],
-                'filler':[]
-            }
-        },{
             'id':'rangedAttacker',
 			'maxBodyType':5,
             'bodyType':RANGED_ATTACK,
@@ -76,6 +62,24 @@ module.exports.loop = function () {
                 'min':[ATTACK, MOVE],
                 'loop':[ATTACK, MOVE],
                 'filler':[TOUGH]
+            }
+        },{
+            'id':'upgrader',
+            'maxBodyType':5,
+            'bodyType':WORK,
+			'body': {
+                'min':[CARRY, WORK, MOVE],
+                'loop':[WORK, CARRY, MOVE],
+                'filler':[]
+            }
+        },{
+            'id':'builder',
+            'maxBodyType':5,
+            'bodyType':WORK,
+			'body': {
+                'min':[CARRY, WORK, MOVE],
+                'loop':[WORK, CARRY, MOVE],
+                'filler':[]
             }
         },{
             'id':'claimer',
@@ -109,6 +113,12 @@ module.exports.loop = function () {
 			delete Memory.creeps[i];
 		}
 	}
+	// Creeps
+    var creeps = Game.creeps
+    for(var i in creeps) {
+		creeps[i].main();
+    }
+    console.log("----------------------------------------------------------------");
 	// Rooms
 	if(!Memory.rooms) {
 		Memory.rooms = {};
@@ -130,11 +140,6 @@ module.exports.loop = function () {
 		}
 		room.main();
 	}
-    // Creeps
-    var creeps = Game.creeps
-    for(var i in creeps) {
-		creeps[i].main();
-    }
     // Stats
     console.log("CPU : "+Game.cpu.getUsed());
 }

@@ -2,6 +2,9 @@ Creep.prototype.explore = function() {
 	let roomName = this.memory.roomName;
 	if(!roomName) {
 		let rooms = Memory.rooms[this.memory.originalRoom].rooms;
+		if(!rooms) {
+			return;
+		}
 		rooms = Object.keys(rooms).map(function (key) { return rooms[key]; });
 		rooms = rooms.filter(function(room) {
 			return room.status == 'null' || room.status == 'youpi';

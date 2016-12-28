@@ -19,9 +19,14 @@ Creep.prototype.assignCreepToEmpty = function(creepId, toEmptyId) {
 	toEmpty.creeps[creepId] = creepId;
 }
 Creep.prototype.unassignCreepToEmpty = function() {
-    try {
-        delete Memory.toEmptys[this.memory.toEmptyId].creeps[this.id];
-    } catch (e) {}
+	let id = this.memory.toEmptyId;
+	let object = Game.getObjectById(id);
+	if(object) {
+		let roomName = object.getOriginalRoomName();
+		try {
+			delete Memory.rooms[roomName].toEmptys[id].creeps[this.id];
+		} catch(e) {}
+	}
     this.memory.toEmptyId = null;
 }
 
@@ -31,50 +36,41 @@ Creep.prototype.searchToFill = function() {
 		this.say_("no fill");
 		return;
 	}
-	// object to array
 	toFills = Object.keys(toFills).map(function (key) { return toFills[key]; });
-	for(let i in toFills) {
-		//console.log(JSON.stringify(toFills[i]));
-	}
 	let this_ = this;
 	toFills.sort(function(a, b) { 
-		//try {
-			// a
-			var aObject = Game.getObjectById(a.id);
-			if(!aObject) {
-				delete Memory.toFills[a.id];
-				return 1;
+		var aObject = Game.getObjectById(a.id);
+		if(!aObject) {
+			delete Memory.toFills[a.id];
+			return 1;
+		}
+		var aFree = aObject.getFreeCapacity();
+		var aMax = aObject.getMaxCapacity();
+		for(var i in a.creeps) {
+			var creep = Game.getObjectById(a.creeps[i]);
+			if(!creep) {
+				delete a.creeps[i];
+				continue;
 			}
-			var aFree = aObject.getFreeCapacity();
-			var aMax = aObject.getMaxCapacity();
-			for(var i in a.creeps) {
-				var creep = Game.getObjectById(a.creeps[i]);
-				if(!creep) {
-					delete a.creeps[i];
-					continue;
-				}
-				aFree -= creep.getTotalCarrying();
+			aFree -= creep.getTotalCarrying();
+		}
+		// b
+		var bObject = Game.getObjectById(b.id);
+		if(!bObject) {
+			delete Memory.toFills[b.id];
+			return -1;
+		}
+		var bFree = bObject.getFreeCapacity();
+		var bMax = bObject.getMaxCapacity();
+		for(var i in b.creeps) {
+			var creep = Game.getObjectById(b.creeps[i]);
+			if(!creep) {
+				delete b.creeps[i];
+				continue;
 			}
-			// b
-			var bObject = Game.getObjectById(b.id);
-			if(!bObject) {
-				delete Memory.toFills[b.id];
-				return -1;
-			}
-			var bFree = bObject.getFreeCapacity();
-			var bMax = bObject.getMaxCapacity();
-			for(var i in b.creeps) {
-				var creep = Game.getObjectById(b.creeps[i]);
-				if(!creep) {
-					delete b.creeps[i];
-					continue;
-				}
-				bFree -= creep.getTotalCarrying();
-			}
-			return -(aFree/aMax-bFree/bMax);
-		//} catch(e) {
-		//	this_.say_(a.id+ " " + b.id);
-		//}
+			bFree -= creep.getTotalCarrying();
+		}
+		return -(aFree/aMax-bFree/bMax);
 	});
 	this.assignCreepToFill(this.id, toFills[0].id);
 }
@@ -111,50 +107,7 @@ Creep.prototype.carry_ = function() {
     }
     // Search toEmpty
     else if(!this.memory.toEmptyId && this.freeToCarry()) {
-		var toEmptys = Memory.rooms[this.memory.originalRoom].toEmptys;
-        if(!toEmptys) {
-			this.say_("no empty");
-            return;
-        }
-        toEmptys = Object.keys(toEmptys).map(function (key) { return toEmptys[key]; });
-        toEmptys.sort(function(a, b) { 
-            // a
-			try {
-				var aObject = Game.getObjectById(a.id);
-				if(!aObject) {
-					delete Memory.toEmptys[a.id];
-					return 1;
-				}
-				var aQuantity = aObject.getTotalCarrying();
-				for(var i in a.creeps) {
-					var creep = Game.getObjectById(a.creeps[i]);
-					if(!creep) {
-						delete Memory.toEmptys[a.id].creeps[i];
-						continue;
-					}
-					aQuantity -= creep.freeToCarry();
-				}
-				// b
-				var bObject = Game.getObjectById(b.id);
-				if(!bObject) {
-					delete Memory.toEmptys[b.id];
-					return -1;
-				}
-				var bQuantity = bObject.getTotalCarrying();
-				for(var i in b.creeps) {
-					var creep = Game.getObjectById(b.creeps[i]);
-					if(!creep) {
-						delete Memory.toEmptys[b.id].creeps[i];
-						continue;
-					}
-					bQuantity -= creep.freeToCarry();
-				}
-				return bQuantity-aQuantity;
-			} catch(e) {
-				//console.log(e);
-			}
-        });
-		this.assignCreepToEmpty(this.id, toEmptys[0].id);
+		this.searchToEmpty();
     }
     // Move & empty
     else if(this.memory.toEmptyId && this.freeToCarry()) {
@@ -256,4 +209,53 @@ Creep.prototype.carry_ = function() {
 			}
 		}
 	}*/
+}
+
+Creep.prototype.searchToEmpty = function() {
+	var toEmptys = Memory.rooms[this.memory.originalRoom].toEmptys;
+	if(!toEmptys) {
+		this.say_("no empty");
+		return;
+	}
+	toEmptys = Object.keys(toEmptys).map(function (key) { return toEmptys[key]; });
+	toEmptys.sort(function(a, b) { 
+		try {
+			// a
+			var aObject = Game.getObjectById(a.id);
+			if(!aObject) {
+				delete Memory.toEmptys[a.id];
+				return 1;
+			}
+			var aQuantity = aObject.getTotalCarrying();
+			var reserved = 0;
+			for(var i in a.creeps) {
+				var creep = Game.getObjectById(a.creeps[i]);
+				if(!creep) {
+					delete Memory.toEmptys[a.id].creeps[i];
+					continue;
+				}
+				reserved += creep.freeToCarry();
+			}
+			aQuantity -= reserved;
+			// b
+			var bObject = Game.getObjectById(b.id);
+			if(!bObject) {
+				delete Memory.toEmptys[b.id];
+				return -1;
+			}
+			var bQuantity = bObject.getTotalCarrying();
+			for(var i in b.creeps) {
+				var creep = Game.getObjectById(b.creeps[i]);
+				if(!creep) {
+					delete Memory.toEmptys[b.id].creeps[i];
+					continue;
+				}
+				bQuantity -= creep.freeToCarry();
+			}
+			return bQuantity-aQuantity;
+		} catch(e) {
+			//console.log(e);
+		}
+	});
+	this.assignCreepToEmpty(this.id, toEmptys[0].id);
 }
