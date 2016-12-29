@@ -18,6 +18,7 @@ require('constants');
 
 module.exports.loop = function () {
 	Game.CPU_LIMIT = 2 * Game.cpu.limit * Game.cpu.bucket / 10000;
+	Game.STATS_SIZE = 100;
 	//
 	let cpu = 0;
     console.log("####################################################################################");
@@ -27,6 +28,11 @@ module.exports.loop = function () {
 	delete Memory.toMines;
 	delete Memory.toFills;
 	delete Memory.toEmptys;
+	// Stats
+	if(!Memory.stats) {
+		Memory.stats = {};
+	}
+	Memory.stats[Game.time] = {};
 	// Roles
 	Memory.roles = [ {
             'id':'miner',
@@ -142,4 +148,16 @@ module.exports.loop = function () {
 	console.log("Bucket\t\t"+ ("     " + Game.cpu.bucket.toFixed(1)).slice(-8));
 	console.log("Total CPU\t"+ ("     " + cpu.toFixed(1)).slice(-8));
 	console.log("CPU limit\t"+ ("     " + Game.CPU_LIMIT.toFixed(1)).slice(-8));
+	// Stats
+	Memory.stats[Game.time].cpu = {};
+	Memory.stats[Game.time].cpu.bucket = Game.cpu.bucket;
+	Memory.stats[Game.time].cpu.used = cpu;
+	Memory.stats[Game.time].cpu.limit = Game.cpu.limit;
+	Memory.stats[Game.time].cpu.dynamicLimit = Game.CPU_LIMIT;
+	//
+	for(let i in Memory.stats) {
+		if (i < Game.time-Game.STATS_SIZE) {
+			delete Memory.stats[i];
+		}
+	}
 }
