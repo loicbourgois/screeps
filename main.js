@@ -18,7 +18,7 @@ require('constants');
 
 module.exports.loop = function () {
 	Game.CPU_LIMIT = 2 * Game.cpu.limit * Game.cpu.bucket / 10000;
-	Game.STATS_SIZE = 100;
+	Game.STATS_SIZE = 32;
 	//
 	let cpu = 0;
     console.log("####################################################################################");
@@ -157,7 +157,7 @@ module.exports.loop = function () {
 	Memory.stats[Game.time].datetime = new Date().toISOString();
 	//
 	for(let i in Memory.stats) {
-		if (i < Game.time-Game.STATS_SIZE) {
+		if (i <= Game.time-Game.STATS_SIZE) {
 			delete Memory.stats[i];
 		}
 	}

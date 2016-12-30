@@ -2,11 +2,13 @@ var USERNAME = _.find(Game.structures).owner.username;
 var ROOM_RADIUS = 2;
 
 Room.prototype.main = function() {
-	this.reset_();
+	this.resetMemory();
+	this.initStats();
 	this.handleSources();
 	this.handleResources();
 	this.handleSpawns();
 	this.handleCreeps();
+	this.endStats();
 }
 
 Room.prototype.getRoomList = function(roomName, count) {
@@ -32,8 +34,8 @@ Room.prototype.getRoomList = function(roomName, count) {
 	return roomList;
 }
 
-Room.prototype.reset_ = function() {
-	// Reset rooms
+Room.prototype.resetMemory = function() {
+	// Rooms
 	if(! Memory.rooms[this.name].rooms) {
 		Memory.rooms[this.name].rooms = {};
 	}
@@ -88,11 +90,10 @@ Room.prototype.reset_ = function() {
 			rooms[roomName].status = 'null';
 		}*/
 	}
-	// Rooms ?
 	let roomToManages = this.getRoomToManage();
 	console.log("Rooms\t\t"+JSON.stringify(roomToManages.length, null, 2));
 	console.log("Max rooms\t" + roomList.length);
-	// Reset roles
+	// Roles
 	Memory.rooms[this.name].roles = JSON.parse(JSON.stringify(Memory.roles));
 	
 	// Reset resources
@@ -363,55 +364,69 @@ Room.prototype.getHostileBodycount = function() {
 
 
 Room.prototype.handleCreeps = function() {
-	let startCpu = Game.cpu.getUsed();
+	let partStats = {};
+	for(let partType in BODYPART_COST) {
+		partStats[partType] = 0;
+	}
+	let screepStats = {};
+	for(let i in Memory.rooms[this.name].roles) {
+		let roleId = Memory.rooms[this.name].roles[i].id;
+		screepStats[roleId] = {
+			"cpu":0,
+			"count":0,
+			"bodyCount":0
+		}
+	}
+	//
     var creeps = this.findAllMyCreeps();
-    //
-	for(var i in creeps) {
-		if(creeps[i].memory.roleId != 'carrier') {
-			creeps[i].main();
-			if(Game.cpu.getUsed()>Game.CPU_LIMIT ) {
-				break;
-			}
+	creeps = creeps.sort(function(creepA,creepB) {
+		if(creepA.memory.roleId == 'carrier' && creepB.memory.roleId != 'carrier') {
+			return 1;
+		} else if (creepA.memory.roleId != 'carrier' && creepB.memory.roleId == 'carrier') {
+			return -1;
+		}else if (creepA.memory.roleId == 'carrier' && creepB.memory.roleId == 'carrier') {
+			return -(creepA.ticksToLive - creepB.ticksToLive);
 		}
-    }
-    let otherCreepCpu = (Game.cpu.getUsed()-startCpu);
-	startCpu = Game.cpu.getUsed();
+	});
 	//
-	creeps = this.findMycreeps('carrier').reverse();
-	for(var i in creeps) {
-		if(creeps[i].memory.roleId == 'carrier') {
+	let cpuStart = Game.cpu.getUsed();
+	let roleId = '';
+	let bodyType = '';
+	for(let i in creeps) {
+		cpuStart = Game.cpu.getUsed();
+		if(Game.cpu.getUsed() < Game.CPU_LIMIT ) {
 			creeps[i].main();
-			if(Game.cpu.getUsed()>Game.CPU_LIMIT ) {
-				break;
-			}
 		}
-    }
-	let carryCpu = (Game.cpu.getUsed()-startCpu);
-	let creepCpu = carryCpu + otherCreepCpu;
-	//
-	console.log("----------------------------------------------------------------");
-	console.log("Creep CPU\t"+ ("         " + creepCpu.toFixed(1)).slice(-8));
-		console.log("\tOther CPU\t"+ ("         " + otherCreepCpu.toFixed(1)).slice(-8));
-		console.log("\tCarry CPU\t"+ ("         " + carryCpu.toFixed(1)).slice(-8));
-		carryCpu = {
-			moveAndFill:0,
-			searchToEmpty:0,
-			moveAndEmpty:0,
-			searchToFill:0,
-		};
-		for(var i in creeps) {
-			let cpuu = creeps[i].memory.cpu;
-			for(let j in cpuu) {
-				if(!carryCpu[j]) {
-					carryCpu[j] = 0;
-				}
-				carryCpu[j] = carryCpu[j] + cpuu[j];
-			}
+		for(let j in creeps[i].body) {
+			let partType = creeps[i].body[j].type
+			partStats[partType] += 1;
 		}
-			console.log("\t\tmoveAndFill\t"+ ("            " + carryCpu.moveAndFill.toFixed(1)).slice(-8));
-			console.log("\t\tsearchToEmpty\t"+ ("      " + carryCpu.searchToEmpty.toFixed(1)).slice(-8));
-			console.log("\t\tmoveAndEmpty\t"+ ("     " + carryCpu.moveAndEmpty.toFixed(1)).slice(-8));
-			console.log("\t\tsearchToFill\t"+ ("      " + carryCpu.searchToFill.toFixed(1)).slice(-8));
 		
-	
+		roleId = creeps[i].memory.roleId;
+		let bodyType = Memory.roles.filter(function(role) {
+			return role.id == roleId;
+		})[0].bodyType;
+		screepStats[roleId].bodyCount += creeps[i].countBodyPart(bodyType);
+		screepStats[roleId].count += 1;
+		screepStats[roleId].cpu += (Game.cpu.getUsed()-cpuStart);
+    }
+	Memory.stats[Game.time].rooms[this.name].creeps = screepStats;
+	Memory.stats[Game.time].rooms[this.name].parts = partStats;
+}
+
+Room.prototype.initStats = function() {
+	if(!Memory.stats[Game.time].rooms) {
+		Memory.stats[Game.time].rooms = {};
+	}
+	Memory.stats[Game.time].rooms[this.name] = {};
+	Memory.stats[Game.time].rooms[this.name].creeps = {};
+	Memory.stats[Game.time].rooms[this.name].parts = {};
+	for(let i in Memory.rooms[this.name].roles) {
+		let role = Memory.rooms[this.name].roles[i];
+		Memory.stats[Game.time].rooms[this.name].creeps[role.roleId] = {}
+	}
+}
+
+
+Room.prototype.endStats = function() {
 }
