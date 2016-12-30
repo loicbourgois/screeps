@@ -155,6 +155,10 @@ module.exports.loop = function () {
 	Memory.stats[Game.time].cpu.limit = Game.cpu.limit;
 	Memory.stats[Game.time].cpu.dynamicLimit = Game.CPU_LIMIT;
 	Memory.stats[Game.time].datetime = new Date().toISOString();
+	Memory.stats[Game.time].gcl = {};
+	Memory.stats[Game.time].gcl.level = Game.gcl.level;
+	Memory.stats[Game.time].gcl.progress = Game.gcl.progress;
+	Memory.stats[Game.time].gcl.progressTotal = Game.gcl.progressTotal;
 	//
 	for(let i in Memory.stats) {
 		if (i <= Game.time-Game.STATS_SIZE) {

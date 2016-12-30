@@ -1,5 +1,6 @@
 Source.prototype.main = function() {
-    this.say_(this.getNeededWorking());
+	// too expensive ?
+    //this.say_(this.getNeededWorking());
 };
 
 Source.prototype.say_ = function(message) {

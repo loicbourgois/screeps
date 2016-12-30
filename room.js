@@ -2,13 +2,26 @@ var USERNAME = _.find(Game.structures).owner.username;
 var ROOM_RADIUS = 2;
 
 Room.prototype.main = function() {
+	let cpuStart = Game.cpu.getUsed();
+	let cpu = cpuStart;
 	this.resetMemory();
 	this.initStats();
+	Memory.stats[Game.time].rooms[this.name].cpu = {};
+	Memory.stats[Game.time].rooms[this.name].cpu.init = Game.cpu.getUsed()-cpu;
+	cpu = Game.cpu.getUsed();
 	this.handleSources();
+	Memory.stats[Game.time].rooms[this.name].cpu.sources = Game.cpu.getUsed()-cpu;
+	cpu = Game.cpu.getUsed();
 	this.handleResources();
+	Memory.stats[Game.time].rooms[this.name].cpu.resources = Game.cpu.getUsed()-cpu;
+	cpu = Game.cpu.getUsed();
 	this.handleSpawns();
+	Memory.stats[Game.time].rooms[this.name].cpu.spawns = Game.cpu.getUsed()-cpu;
+	cpu = Game.cpu.getUsed();
 	this.handleCreeps();
-	this.endStats();
+	Memory.stats[Game.time].rooms[this.name].cpu.creeps = Game.cpu.getUsed()-cpu;
+	cpu = Game.cpu.getUsed();
+	Memory.stats[Game.time].rooms[this.name].cpu.total = Game.cpu.getUsed()-cpuStart;
 }
 
 Room.prototype.getRoomList = function(roomName, count) {
@@ -328,6 +341,7 @@ Room.prototype.handleSpawns = function() {
     for(var i in spawns) {
         spawns[i].main();
     }
+	
 }
 
 Room.prototype.handleResources = function() {
@@ -425,6 +439,26 @@ Room.prototype.initStats = function() {
 		let role = Memory.rooms[this.name].roles[i];
 		Memory.stats[Game.time].rooms[this.name].creeps[role.roleId] = {}
 	}
+	Memory.stats[Game.time].rooms[this.name].energyAvailable = this.energyAvailable;
+	Memory.stats[Game.time].rooms[this.name].energyCapacityAvailable = this.energyCapacityAvailable;
+	Memory.stats[Game.time].rooms[this.name].droppedEnergy = this.getTotalDroppedEnergy();
+	Memory.stats[Game.time].rooms[this.name].controller = {};
+	Memory.stats[Game.time].rooms[this.name].controller.level = this.controller.level;
+	Memory.stats[Game.time].rooms[this.name].controller.progressTotal = this.controller.progressTotal;
+	Memory.stats[Game.time].rooms[this.name].controller.progress = this.controller.progress;
+}
+
+Room.prototype.getTotalDroppedEnergy = function() {
+	let quantity = 0;
+	let rooms = this.getRoomToManage();
+	for(let i in rooms) {
+		let room = rooms[i];
+		let droppedEnergies = room.find(FIND_DROPPED_ENERGY);
+		for(let j in droppedEnergies) {
+			quantity += droppedEnergies[j].amount;
+		}
+	}
+	return quantity;
 }
 
 
