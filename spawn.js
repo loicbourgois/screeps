@@ -205,7 +205,7 @@ Spawn.prototype.getRoleToCreate = function() {
             case 'carrier' : {
 				var max = 0;
 				for(var j in sources) {
-                    max += sources[j].energyCapacity/100;
+                    max += sources[j].energyCapacity/150;
                 }
                 role.max = max;
                 role.minBodyCount = sources.length;

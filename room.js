@@ -52,7 +52,8 @@ Room.prototype.resetMemory = function() {
 	if(! Memory.rooms[this.name].rooms) {
 		Memory.rooms[this.name].rooms = {};
 	}
-	let roomList = this.getRoomList(this.name, this.controller.level/3);
+	let influenceSize = this.controller.level/3;
+	let roomList = this.getRoomList(this.name, influenceSize);
 	let rooms = Memory.rooms[this.name].rooms;
 	for(let i in roomList) {
 		let roomName = roomList[i];
