@@ -248,7 +248,9 @@ Creep.prototype.moveAndFill = function() {
 			break;
 		}
 	}
-	this.sayMoving(toFill.pos);
+	if(toFill) {
+		this.sayMoving(toFill.pos);
+	}
 }
 
 /*let roads = this.room.lookForAt(LOOK_STRUCTURES, this.pos);
