@@ -235,12 +235,12 @@ Creep.prototype.moveAndFill = function() {
 			break;
 		}
 		case ERR_FULL:{
-			this.unassignCreepToFill(this.id, toFill.id);
+			this.unassignCreepToFill();
 			this.searchToFill();
 			break;
 		}
 		case ERR_INVALID_TARGET:{
-			this.unassignCreepToFill(this.id, toFill.id);
+			this.unassignCreepToFill();
 			this.searchToFill();
 			break;
 		}

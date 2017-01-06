@@ -47,7 +47,7 @@ module.exports.loop = function () {
             'maxBodyType':10,
             'bodyType':CARRY,
 			'body': {
-                'min':[MOVE, CARRY],
+                'min':[MOVE, CARRY, MOVE, CARRY],
                 'loop':[MOVE, CARRY],
                 'filler':[]
             }
